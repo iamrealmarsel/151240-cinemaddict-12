@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [mars](https://up.htmlacademy.ru/ecmascript/12/user/151240).
-* Наставник: `Неизвестно`.
+* Наставник: [mars](https://htmlacademy.ru/profile/id1237543).
 
 ---
 
