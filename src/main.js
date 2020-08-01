@@ -14,44 +14,44 @@ const FILM_COUNT = 5;
 const FILM_EXTRA_COUNT = 2;
 
 
-const headerElement = document.querySelector('.header');
-const mainElement = document.querySelector('.main');
-const footerElement = document.querySelector('.footer');
-const footerStat = footerElement.querySelector('.footer__statistics');
+const headerElement = document.querySelector(`.header`);
+const mainElement = document.querySelector(`.main`);
+const footerElement = document.querySelector(`.footer`);
+const footerStat = footerElement.querySelector(`.footer__statistics`);
 
 
 const renderDOM = (container, markup, place) => {
   container.insertAdjacentHTML(place, markup);
-}
+};
 
 
-renderDOM(headerElement, createProfileMarkup(), 'beforeend');
-renderDOM(mainElement, createNavigationMarkup(), 'afterbegin');
-renderDOM(mainElement, createSortMarkup(), 'beforeend');
-renderDOM(mainElement, createFilmContainerMarkup(), 'beforeend');
+renderDOM(headerElement, createProfileMarkup(), `beforeend`);
+renderDOM(mainElement, createNavigationMarkup(), `afterbegin`);
+renderDOM(mainElement, createSortMarkup(), `beforeend`);
+renderDOM(mainElement, createFilmContainerMarkup(), `beforeend`);
 
-const filmContainer = mainElement.querySelector('.films');
-const filmList = filmContainer.querySelector('.films-list__container');
+const filmContainer = mainElement.querySelector(`.films`);
+const filmList = filmContainer.querySelector(`.films-list__container`);
 
 for (let i = 0; i < FILM_COUNT; i++) {
-  renderDOM(filmList, createFilmCardMarkup(), 'beforeend');
+  renderDOM(filmList, createFilmCardMarkup(), `beforeend`);
 }
 
-renderDOM(filmList, createButtonMoreMarkup(), 'afterend');
-renderDOM(filmContainer, createFilmTopRatedMarkup(), 'beforeend');
-renderDOM(filmContainer, createFilmMostCommentedMarkup(), 'beforeend');
+renderDOM(filmList, createButtonMoreMarkup(), `afterend`);
+renderDOM(filmContainer, createFilmTopRatedMarkup(), `beforeend`);
+renderDOM(filmContainer, createFilmMostCommentedMarkup(), `beforeend`);
 
-const filmListExtra = filmContainer.querySelectorAll('.films-list--extra');
-const filmListTopRated = filmListExtra[0].querySelector('.films-list__container');
-const filmListMostcommented = filmListExtra[1].querySelector('.films-list__container');
+const filmListExtra = filmContainer.querySelectorAll(`.films-list--extra`);
+const filmListTopRated = filmListExtra[0].querySelector(`.films-list__container`);
+const filmListMostcommented = filmListExtra[1].querySelector(`.films-list__container`);
 
 for (let i = 0; i < FILM_EXTRA_COUNT; i++) {
-  renderDOM(filmListTopRated, createFilmCardMarkup(), 'beforeend');
+  renderDOM(filmListTopRated, createFilmCardMarkup(), `beforeend`);
 }
 
 for (let i = 0; i < FILM_EXTRA_COUNT; i++) {
-  renderDOM(filmListMostcommented, createFilmCardMarkup(), 'beforeend');
+  renderDOM(filmListMostcommented, createFilmCardMarkup(), `beforeend`);
 }
 
-renderDOM(footerStat, createFooterStatMarkup(), 'beforeend');
-renderDOM(footerElement, createFilmDetailsMarkup(), 'afterend');
+renderDOM(footerStat, createFooterStatMarkup(), `beforeend`);
+renderDOM(footerElement, createFilmDetailsMarkup(), `afterend`);

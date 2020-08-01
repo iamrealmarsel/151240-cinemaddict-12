@@ -1,5 +1,5 @@
 const createFilmContainerMarkup = () => {
-  return(`
+  return (`
     <section class="films">
       <section class="films-list">
         <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
@@ -8,7 +8,7 @@ const createFilmContainerMarkup = () => {
       </section>
     </section>
     `);
-}
+};
 
 
-export {createFilmContainerMarkup}
+export {createFilmContainerMarkup};

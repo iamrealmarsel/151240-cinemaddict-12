@@ -1,5 +1,5 @@
 const createFilmDetailsMarkup = () => {
-  return(`
+  return (`
     <section class="film-details">
       <form class="film-details__inner" action="" method="get">
         <div class="form-details__top-container">
@@ -115,7 +115,7 @@ const createFilmDetailsMarkup = () => {
       </form>
     </section>
     `);
-}
+};
 
 
-export {createFilmDetailsMarkup}
+export {createFilmDetailsMarkup};

@@ -1,5 +1,5 @@
 const createFilmCardMarkup = () => {
-  return(`
+  return (`
     <article class="film-card">
       <h3 class="film-card__title">Popeye the Sailor Meets Sindbad the Sailor</h3>
       <p class="film-card__rating">6.3</p>
@@ -18,7 +18,7 @@ const createFilmCardMarkup = () => {
       </form>
     </article>
     `);
-}
+};
 
 
-export {createFilmCardMarkup}
+export {createFilmCardMarkup};
