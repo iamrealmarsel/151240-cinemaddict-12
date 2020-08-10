@@ -1,5 +1,7 @@
-const createFooterStatMarkup = () => {
-  return (`<p>130 291 movies inside</p>`);
+
+const createFooterStatMarkup = (filmMocks) => {
+
+  return `<p>${filmMocks.length} movies inside</p>`;
 };
 
 
