@@ -1,5 +1,5 @@
 import {FILM_COUNT, FILM_COUNT_PER_STEP, FILM_EXTRA_COUNT, FILM_MOCKS} from './const.js';
-import {renderDOM, render} from './utils.js';
+import {render} from './utils.js';
 import {generateFilmCardMock} from './mock/film-card.js';
 import FilterView from './view/filter.js';
 import ButtonMoreView from './view/button-more.js';
@@ -24,7 +24,7 @@ for (let i = 0; i < FILM_COUNT; i++) {
 }
 
 
-renderDOM(new ProfileView(FILM_MOCKS).getElement(), headerElement, `beforeend`);
+render(new ProfileView(FILM_MOCKS).getElement(), headerElement, `beforeend`);
 render(new SortView().getElement(), mainElement, `beforeend`);
 render(new FilmContainerView().getElement(), mainElement, `beforeend`);
 
