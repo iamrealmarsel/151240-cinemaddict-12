@@ -1,3 +1,4 @@
+import {createElement} from '../utils.js';
 
 const createFilmDetailsMarkup = (filmMocks) => {
 
@@ -130,4 +131,28 @@ const createFilmDetailsMarkup = (filmMocks) => {
 };
 
 
-export {createFilmDetailsMarkup};
+class FilmDetails {
+  constructor(filmMock) {
+    this._filmMock = filmMock;
+    this._element = null;
+  }
+
+  getMarkup() {
+    return createFilmDetailsMarkup(this._filmMock);
+  }
+
+  getElement() {
+    if (this._element === null) {
+      this._element = createElement(this.getMarkup());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+
+export default FilmDetails;

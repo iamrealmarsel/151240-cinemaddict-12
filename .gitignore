@@ -10,6 +10,7 @@ Thumbs.db
 # Вспомогательные файлы
 *.log*
 node_modules/
+src/test.js
 
 # Собранные JS-файлы (бандл)
 public/bundle.js

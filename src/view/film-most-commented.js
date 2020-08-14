@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 const createFilmMostCommentedMarkup = () => {
   return (`
     <section class="films-list--extra">
@@ -9,4 +11,27 @@ const createFilmMostCommentedMarkup = () => {
 };
 
 
-export {createFilmMostCommentedMarkup};
+class FilmContainerMostCommented {
+  constructor() {
+    this._element = null;
+  }
+
+  getMarkup() {
+    return createFilmMostCommentedMarkup();
+  }
+
+  getElement() {
+    if (this._element === null) {
+      this._element = createElement(this.getMarkup());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
+
+export default FilmContainerMostCommented;
