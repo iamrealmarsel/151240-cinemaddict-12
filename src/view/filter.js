@@ -25,7 +25,7 @@ const createFilterMarkup = (filmMocks) => {
 };
 
 
-class Filter {
+const Filter = class  {
   constructor(filmMocks) {
     this._filmMocks = filmMocks;
     this._element = null;

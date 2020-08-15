@@ -11,7 +11,7 @@ const createFilmMostCommentedMarkup = () => {
 };
 
 
-class FilmContainerMostCommented {
+const FilmContainerMostCommented = class  {
   constructor() {
     this._element = null;
   }

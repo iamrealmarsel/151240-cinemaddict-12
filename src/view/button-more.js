@@ -5,7 +5,7 @@ const createButtonMoreMarkup = () => {
 };
 
 
-class ButtonMore {
+const ButtonMore = class  {
   constructor() {
     this._element = null;
   }

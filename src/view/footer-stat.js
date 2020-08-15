@@ -6,7 +6,7 @@ const createFooterStatsMarkup = (filmMocks) => {
 };
 
 
-class FooterStats {
+const FooterStats = class  {
   constructor(filmMocks) {
     this._filmMocks = filmMocks;
     this._element = null;

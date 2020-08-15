@@ -19,6 +19,7 @@ const footerElement = document.querySelector(`.footer`);
 const footerStat = footerElement.querySelector(`.footer__statistics`);
 
 
+// создаем моковые данные
 for (let i = 0; i < FILM_COUNT; i++) {
   FILM_MOCKS.push(generateFilmCardMock());
 }
@@ -27,18 +28,14 @@ for (let i = 0; i < FILM_COUNT; i++) {
 render(new ProfileView(FILM_MOCKS).getElement(), headerElement, `beforeend`);
 render(new SortView().getElement(), mainElement, `beforeend`);
 render(new FilmContainerView().getElement(), mainElement, `beforeend`);
+render(new FilterView(FILM_MOCKS).getElement(), mainElement, `afterbegin`);
+render(new FooterStatsView(FILM_MOCKS).getElement(), footerStat, `beforeend`);
 
 const filmContainer = mainElement.querySelector(`.films`);
 const filmList = filmContainer.querySelector(`.films-list__container`);
 
-render(new FilterView(FILM_MOCKS).getElement(), mainElement, `afterbegin`);
-render(new FilmContainerTopRatedView().getElement(), filmContainer, `beforeend`);
-render(new FilmContainerMostCommentedView().getElement(), filmContainer, `beforeend`);
 
-const filmListExtra = filmContainer.querySelectorAll(`.films-list--extra`);
-const filmListTopRated = filmListExtra[0].querySelector(`.films-list__container`);
-const filmListMostcommented = filmListExtra[1].querySelector(`.films-list__container`);
-
+// описываем функцию по рендеру карточек фильмов
 const renderFilmCards = (filmMock) => {
   const FilmCardComponent = new FilmCardView(filmMock);
   const FilmDetailsComponent = new FilmDetailsView(filmMock);
@@ -73,23 +70,13 @@ const renderFilmCards = (filmMock) => {
 };
 
 
+// рендерим карточки фильмов
 FILM_MOCKS
   .slice(0, Math.min(FILM_COUNT, FILM_COUNT_PER_STEP))
   .forEach((filmMock) => renderFilmCards(filmMock));
 
 
-FILM_MOCKS
-  .slice(0, FILM_EXTRA_COUNT)
-  .forEach((filmMock) => render(new FilmCardView(filmMock).getElement(), filmListTopRated, `beforeend`));
-
-FILM_MOCKS
-  .slice(0, FILM_EXTRA_COUNT)
-  .forEach((filmMock) => render(new FilmCardView(filmMock).getElement(), filmListMostcommented, `beforeend`));
-
-
-render(new FooterStatsView(FILM_MOCKS).getElement(), footerStat, `beforeend`);
-
-
+// описываем поведение кнопки Show More
 if (FILM_COUNT > FILM_COUNT_PER_STEP) {
 
   const buttonMoreElement = new ButtonMoreView().getElement();
@@ -114,4 +101,23 @@ if (FILM_COUNT > FILM_COUNT_PER_STEP) {
 
 }
 
+
+
+// показ дополнительных карточек пока полноценно не реализован,
+// так как задача необязательная, буду доделывать по мере свободного времени
+
+render(new FilmContainerTopRatedView().getElement(), filmContainer, `beforeend`);
+render(new FilmContainerMostCommentedView().getElement(), filmContainer, `beforeend`);
+
+const filmListExtra = filmContainer.querySelectorAll(`.films-list--extra`);
+const filmListTopRated = filmListExtra[0].querySelector(`.films-list__container`);
+const filmListMostcommented = filmListExtra[1].querySelector(`.films-list__container`);
+
+FILM_MOCKS
+  .slice(0, FILM_EXTRA_COUNT)
+  .forEach((filmMock) => render(new FilmCardView(filmMock).getElement(), filmListTopRated, `beforeend`));
+
+FILM_MOCKS
+  .slice(0, FILM_EXTRA_COUNT)
+  .forEach((filmMock) => render(new FilmCardView(filmMock).getElement(), filmListMostcommented, `beforeend`));
 

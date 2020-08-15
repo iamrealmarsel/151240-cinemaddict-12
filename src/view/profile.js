@@ -27,7 +27,7 @@ const createProfileMarkup = (filmMocks) => {
 };
 
 
-class Profile {
+const Profile = class  {
   constructor(filmMocks) {
     this._filmMocks = filmMocks;
     this._element = null;

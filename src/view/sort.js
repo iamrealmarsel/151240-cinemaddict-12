@@ -11,7 +11,7 @@ const createSortMarkup = () => {
 };
 
 
-class Sort {
+const Sort = class  {
   constructor() {
     this._element = null;
   }

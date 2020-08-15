@@ -131,7 +131,7 @@ const createFilmDetailsMarkup = (filmMocks) => {
 };
 
 
-class FilmDetails {
+const FilmDetails = class  {
   constructor(filmMock) {
     this._filmMock = filmMock;
     this._element = null;

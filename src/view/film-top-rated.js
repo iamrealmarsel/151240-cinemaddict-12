@@ -11,7 +11,7 @@ const createFilmTopRatedMarkup = () => {
 };
 
 
-class FilmContainerTopRated {
+const FilmContainerTopRated = class FilmContainerTopRated {
   constructor() {
     this._element = null;
   }

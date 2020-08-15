@@ -31,7 +31,7 @@ const createFilmCardMarkup = (filmMock) => {
 };
 
 
-class FilmCard {
+const FilmCard = class {
   constructor(filmMock) {
     this._filmMock = filmMock;
     this._element = null;

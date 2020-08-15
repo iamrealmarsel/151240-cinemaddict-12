@@ -13,7 +13,7 @@ const createFilmContainerMarkup = () => {
 };
 
 
-class FilmContainer {
+const FilmContainer = class {
   constructor() {
     this._element = null;
   }
