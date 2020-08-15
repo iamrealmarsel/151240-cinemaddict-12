@@ -27,7 +27,7 @@ const createProfileMarkup = (filmMocks) => {
 };
 
 
-const Profile = class  {
+const Profile = class {
   constructor(filmMocks) {
     this._filmMocks = filmMocks;
     this._element = null;
@@ -48,7 +48,7 @@ const Profile = class  {
   removeElement() {
     this._element = null;
   }
-}
+};
 
 
 export default Profile;

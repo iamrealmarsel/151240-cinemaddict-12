@@ -25,7 +25,7 @@ const createFilterMarkup = (filmMocks) => {
 };
 
 
-const Filter = class  {
+const Filter = class {
   constructor(filmMocks) {
     this._filmMocks = filmMocks;
     this._element = null;
@@ -46,7 +46,7 @@ const Filter = class  {
   removeElement() {
     this._element = null;
   }
-}
+};
 
 
 export default Filter;

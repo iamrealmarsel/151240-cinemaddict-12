@@ -52,7 +52,7 @@ const FilmCard = class {
   removeElement() {
     this._element = null;
   }
-}
+};
 
 
 export default FilmCard;

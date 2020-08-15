@@ -33,7 +33,7 @@ const FilmContainer = class {
   removeElement() {
     this._element = null;
   }
-}
+};
 
 
 export default FilmContainer;

@@ -6,7 +6,7 @@ const createFooterStatsMarkup = (filmMocks) => {
 };
 
 
-const FooterStats = class  {
+const FooterStats = class {
   constructor(filmMocks) {
     this._filmMocks = filmMocks;
     this._element = null;
@@ -27,7 +27,7 @@ const FooterStats = class  {
   removeElement() {
     this._element = null;
   }
-}
+};
 
 
 export default FooterStats;

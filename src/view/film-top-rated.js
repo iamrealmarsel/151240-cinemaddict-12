@@ -31,7 +31,7 @@ const FilmContainerTopRated = class FilmContainerTopRated {
   removeElement() {
     this._element = null;
   }
-}
+};
 
 
 export default FilmContainerTopRated;
