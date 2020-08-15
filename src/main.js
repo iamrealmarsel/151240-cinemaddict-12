@@ -47,23 +47,36 @@ const renderFilmCards = (filmMock) => {
   const commentsLink = filmCardElement.querySelector(`.film-card__comments`);
   const closeButton = filmDetailsElement.querySelector(`.film-details__close-btn`);
 
+  const onEscapeDown = (event) => {
+    if (event.key === `Escape` || event.key === `Esc`) {
+      event.preventDefault();
+      FilmDetailsComponent.removeElement();
+      filmDetailsElement.remove();
+      document.removeEventListener(`keydown`, onEscapeDown);
+    }
+  };
+
   poster.addEventListener(`click`, () => {
     render(filmDetailsElement, footerElement, `afterend`);
+    document.addEventListener(`keydown`, onEscapeDown);
   });
 
   title.addEventListener(`click`, () => {
     render(filmDetailsElement, footerElement, `afterend`);
+    document.addEventListener(`keydown`, onEscapeDown);
   });
 
   commentsLink.addEventListener(`click`, (event) => {
     event.preventDefault();
     render(filmDetailsElement, footerElement, `afterend`);
+    document.addEventListener(`keydown`, onEscapeDown);
   });
 
   closeButton.addEventListener(`click`, (event) => {
     event.preventDefault();
     FilmDetailsComponent.removeElement();
     filmDetailsElement.remove();
+    document.removeEventListener(`keydown`, onEscapeDown);
   });
 
   render(filmCardElement, filmList, `beforeend`);
