@@ -11,6 +11,7 @@ import ProfileView from './view/profile.js';
 import FilmContainerTopRatedView from './view/film-top-rated.js';
 import FooterStatsView from './view/footer-stat.js';
 import SortView from './view/sort.js';
+import NoFilmsView from './view/no-films.js';
 
 
 const headerElement = document.querySelector(`.header`);
@@ -26,110 +27,119 @@ for (let i = 0; i < FILM_COUNT; i++) {
 
 
 render(new ProfileView(FILM_MOCKS).getElement(), headerElement, `beforeend`);
-render(new SortView().getElement(), mainElement, `beforeend`);
-render(new FilmContainerView().getElement(), mainElement, `beforeend`);
 render(new FilterView(FILM_MOCKS).getElement(), mainElement, `afterbegin`);
+render(new SortView().getElement(), mainElement, `beforeend`);
 render(new FooterStatsView(FILM_MOCKS).getElement(), footerStat, `beforeend`);
 
-const filmContainer = mainElement.querySelector(`.films`);
-const filmList = filmContainer.querySelector(`.films-list__container`);
+
+// взависимости от того есть ли фильмы или нет, меняется верстка
+if (FILM_MOCKS.length === 0) {
+
+  render(new NoFilmsView().getElement(), mainElement, `beforeend`);
+
+} else {
+
+  render(new FilmContainerView().getElement(), mainElement, `beforeend`);
+  const filmContainer = mainElement.querySelector(`.films`);
+  const filmList = filmContainer.querySelector(`.films-list__container`);
 
 
-// описываем функцию по рендеру карточек фильмов
-const renderFilmCards = (filmMock) => {
-  const FilmCardComponent = new FilmCardView(filmMock);
-  const FilmDetailsComponent = new FilmDetailsView(filmMock);
-  const filmCardElement = FilmCardComponent.getElement();
-  const filmDetailsElement = FilmDetailsComponent.getElement();
+  // описываем функцию по рендеру карточек фильмов
+  const renderFilmCards = (filmMock) => {
+    const FilmCardComponent = new FilmCardView(filmMock);
+    const FilmDetailsComponent = new FilmDetailsView(filmMock);
+    const filmCardElement = FilmCardComponent.getElement();
+    const filmDetailsElement = FilmDetailsComponent.getElement();
 
-  const poster = filmCardElement.querySelector(`.film-card__poster`);
-  const title = filmCardElement.querySelector(`.film-card__title`);
-  const commentsLink = filmCardElement.querySelector(`.film-card__comments`);
-  const closeButton = filmDetailsElement.querySelector(`.film-details__close-btn`);
+    const poster = filmCardElement.querySelector(`.film-card__poster`);
+    const title = filmCardElement.querySelector(`.film-card__title`);
+    const commentsLink = filmCardElement.querySelector(`.film-card__comments`);
+    const closeButton = filmDetailsElement.querySelector(`.film-details__close-btn`);
 
-  const onEscapeDown = (event) => {
-    if (event.key === `Escape` || event.key === `Esc`) {
+    const onEscapeDown = (event) => {
+      if (event.key === `Escape` || event.key === `Esc`) {
+        event.preventDefault();
+        FilmDetailsComponent.removeElement();
+        filmDetailsElement.remove();
+        document.removeEventListener(`keydown`, onEscapeDown);
+      }
+    };
+
+    poster.addEventListener(`click`, () => {
+      render(filmDetailsElement, footerElement, `afterend`);
+      document.addEventListener(`keydown`, onEscapeDown);
+    });
+
+    title.addEventListener(`click`, () => {
+      render(filmDetailsElement, footerElement, `afterend`);
+      document.addEventListener(`keydown`, onEscapeDown);
+    });
+
+    commentsLink.addEventListener(`click`, (event) => {
+      event.preventDefault();
+      render(filmDetailsElement, footerElement, `afterend`);
+      document.addEventListener(`keydown`, onEscapeDown);
+    });
+
+    closeButton.addEventListener(`click`, (event) => {
       event.preventDefault();
       FilmDetailsComponent.removeElement();
       filmDetailsElement.remove();
       document.removeEventListener(`keydown`, onEscapeDown);
-    }
+    });
+
+    render(filmCardElement, filmList, `beforeend`);
   };
 
-  poster.addEventListener(`click`, () => {
-    render(filmDetailsElement, footerElement, `afterend`);
-    document.addEventListener(`keydown`, onEscapeDown);
-  });
 
-  title.addEventListener(`click`, () => {
-    render(filmDetailsElement, footerElement, `afterend`);
-    document.addEventListener(`keydown`, onEscapeDown);
-  });
-
-  commentsLink.addEventListener(`click`, (event) => {
-    event.preventDefault();
-    render(filmDetailsElement, footerElement, `afterend`);
-    document.addEventListener(`keydown`, onEscapeDown);
-  });
-
-  closeButton.addEventListener(`click`, (event) => {
-    event.preventDefault();
-    FilmDetailsComponent.removeElement();
-    filmDetailsElement.remove();
-    document.removeEventListener(`keydown`, onEscapeDown);
-  });
-
-  render(filmCardElement, filmList, `beforeend`);
-};
+  // рендерим карточки фильмов
+  FILM_MOCKS
+    .slice(0, Math.min(FILM_COUNT, FILM_COUNT_PER_STEP))
+    .forEach((filmMock) => renderFilmCards(filmMock));
 
 
-// рендерим карточки фильмов
-FILM_MOCKS
-  .slice(0, Math.min(FILM_COUNT, FILM_COUNT_PER_STEP))
-  .forEach((filmMock) => renderFilmCards(filmMock));
+  // описываем поведение кнопки Show More
+  if (FILM_COUNT > FILM_COUNT_PER_STEP) {
+
+    const buttonMoreElement = new ButtonMoreView().getElement();
+    render(buttonMoreElement, filmList, `afterend`);
+
+    let filmCountRender = FILM_COUNT_PER_STEP;
+
+    buttonMoreElement.addEventListener(`click`, (event) => {
+      event.preventDefault();
+
+      FILM_MOCKS
+        .slice(filmCountRender, filmCountRender + FILM_COUNT_PER_STEP)
+        .forEach((filmMock) => renderFilmCards(filmMock));
+
+      filmCountRender += FILM_COUNT_PER_STEP;
+
+      if (filmCountRender >= FILM_COUNT) {
+        buttonMoreElement.remove();
+      }
+
+    });
+
+  }
 
 
-// описываем поведение кнопки Show More
-if (FILM_COUNT > FILM_COUNT_PER_STEP) {
+  // показ дополнительных карточек пока полноценно не реализован,
+  // так как задача необязательная, буду доделывать по мере свободного времени
+  render(new FilmContainerTopRatedView().getElement(), filmContainer, `beforeend`);
+  render(new FilmContainerMostCommentedView().getElement(), filmContainer, `beforeend`);
+  const filmListExtra = filmContainer.querySelectorAll(`.films-list--extra`);
+  const filmListTopRated = filmListExtra[0].querySelector(`.films-list__container`);
+  const filmListMostcommented = filmListExtra[1].querySelector(`.films-list__container`);
+  FILM_MOCKS
+    .slice(0, FILM_EXTRA_COUNT)
+    .forEach((filmMock) => render(new FilmCardView(filmMock).getElement(), filmListTopRated, `beforeend`));
+  FILM_MOCKS
+    .slice(0, FILM_EXTRA_COUNT)
+    .forEach((filmMock) => render(new FilmCardView(filmMock).getElement(), filmListMostcommented, `beforeend`));
 
-  const buttonMoreElement = new ButtonMoreView().getElement();
-  render(buttonMoreElement, filmList, `afterend`);
-
-  let filmCountRender = FILM_COUNT_PER_STEP;
-
-  buttonMoreElement.addEventListener(`click`, (event) => {
-    event.preventDefault();
-
-    FILM_MOCKS
-      .slice(filmCountRender, filmCountRender + FILM_COUNT_PER_STEP)
-      .forEach((filmMock) => renderFilmCards(filmMock));
-
-    filmCountRender += FILM_COUNT_PER_STEP;
-
-    if (filmCountRender >= FILM_COUNT) {
-      buttonMoreElement.remove();
-    }
-
-  });
 
 }
 
 
-// показ дополнительных карточек пока полноценно не реализован,
-// так как задача необязательная, буду доделывать по мере свободного времени
-
-render(new FilmContainerTopRatedView().getElement(), filmContainer, `beforeend`);
-render(new FilmContainerMostCommentedView().getElement(), filmContainer, `beforeend`);
-
-const filmListExtra = filmContainer.querySelectorAll(`.films-list--extra`);
-const filmListTopRated = filmListExtra[0].querySelector(`.films-list__container`);
-const filmListMostcommented = filmListExtra[1].querySelector(`.films-list__container`);
-
-FILM_MOCKS
-  .slice(0, FILM_EXTRA_COUNT)
-  .forEach((filmMock) => render(new FilmCardView(filmMock).getElement(), filmListTopRated, `beforeend`));
-
-FILM_MOCKS
-  .slice(0, FILM_EXTRA_COUNT)
-  .forEach((filmMock) => render(new FilmCardView(filmMock).getElement(), filmListMostcommented, `beforeend`));
 
