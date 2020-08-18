@@ -11,7 +11,7 @@ const createFilmContainerMarkup = () => {
 };
 
 
-const FilmContainer = class {
+const FilmContainerView = class {
   constructor() {
     this._element = null;
   }
@@ -34,4 +34,4 @@ const FilmContainer = class {
 };
 
 
-export default FilmContainer;
+export default FilmContainerView;

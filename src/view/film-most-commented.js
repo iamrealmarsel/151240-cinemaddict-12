@@ -11,7 +11,7 @@ const createFilmMostCommentedMarkup = () => {
 };
 
 
-const FilmContainerMostCommented = class {
+const FilmContainerMostCommentedView = class {
   constructor() {
     this._element = null;
   }
@@ -34,4 +34,4 @@ const FilmContainerMostCommented = class {
 };
 
 
-export default FilmContainerMostCommented;
+export default FilmContainerMostCommentedView;

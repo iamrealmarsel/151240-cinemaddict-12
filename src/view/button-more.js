@@ -5,7 +5,7 @@ const createButtonMoreMarkup = () => {
 };
 
 
-const ButtonMore = class {
+const ButtonMoreView = class {
   constructor() {
     this._element = null;
   }
@@ -28,4 +28,4 @@ const ButtonMore = class {
 };
 
 
-export default ButtonMore;
+export default ButtonMoreView;

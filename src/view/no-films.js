@@ -9,7 +9,7 @@ const createNoFilmsMarkup = () => {
 };
 
 
-const NoFilms = class {
+const NoFilmsView = class {
   constructor() {
     this._element = null;
   }
@@ -32,4 +32,4 @@ const NoFilms = class {
 };
 
 
-export default NoFilms;
+export default NoFilmsView;

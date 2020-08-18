@@ -11,7 +11,7 @@ const createFilmTopRatedMarkup = () => {
 };
 
 
-const FilmContainerTopRated = class FilmContainerTopRated {
+const FilmContainerTopRatedView = class {
   constructor() {
     this._element = null;
   }
@@ -34,4 +34,4 @@ const FilmContainerTopRated = class FilmContainerTopRated {
 };
 
 
-export default FilmContainerTopRated;
+export default FilmContainerTopRatedView;

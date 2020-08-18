@@ -25,7 +25,7 @@ const createFilterMarkup = (filmMocks) => {
 };
 
 
-const Filter = class {
+const FilterView = class {
   constructor(filmMocks) {
     this._filmMocks = filmMocks;
     this._element = null;
@@ -49,4 +49,4 @@ const Filter = class {
 };
 
 
-export default Filter;
+export default FilterView;

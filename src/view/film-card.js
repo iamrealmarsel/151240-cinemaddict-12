@@ -31,7 +31,7 @@ const createFilmCardMarkup = (filmMock) => {
 };
 
 
-const FilmCard = class {
+const FilmCardView = class {
   constructor(filmMock) {
     this._filmMock = filmMock;
     this._element = null;
@@ -55,4 +55,4 @@ const FilmCard = class {
 };
 
 
-export default FilmCard;
+export default FilmCardView;
