@@ -11,7 +11,7 @@ const createSortMarkup = () => {
 };
 
 
-const Sort = class {
+const SortView = class {
   constructor() {
     this._element = null;
   }
@@ -34,4 +34,4 @@ const Sort = class {
 };
 
 
-export default Sort;
+export default SortView;

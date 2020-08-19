@@ -1,23 +1,21 @@
 import {createElement} from '../utils.js';
 
-const createFilmContainerMarkup = () => {
+const createNoFilmsMarkup = () => {
   return `<section class="films">
       <section class="films-list">
-        <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-        <div class="films-list__container">
-        </div>
+        <h2 class="films-list__title">There are no movies in our database</h2>
       </section>
     </section>`;
 };
 
 
-const FilmContainerView = class {
+const NoFilmsView = class {
   constructor() {
     this._element = null;
   }
 
   getMarkup() {
-    return createFilmContainerMarkup();
+    return createNoFilmsMarkup();
   }
 
   getElement() {
@@ -34,4 +32,4 @@ const FilmContainerView = class {
 };
 
 
-export default FilmContainerView;
+export default NoFilmsView;

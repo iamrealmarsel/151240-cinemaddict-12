@@ -131,7 +131,7 @@ const createFilmDetailsMarkup = (filmMocks) => {
 };
 
 
-const FilmDetails = class {
+const FilmDetailsView = class {
   constructor(filmMock) {
     this._filmMock = filmMock;
     this._element = null;
@@ -155,4 +155,4 @@ const FilmDetails = class {
 };
 
 
-export default FilmDetails;
+export default FilmDetailsView;
