@@ -46,8 +46,8 @@ if (FILM_MOCKS.length === 0) {
 
   // описываем функцию по рендеру карточек фильмов
   const renderFilmCards = (filmMock) => {
-    const FilmCardComponent = new FilmCardView(filmMock);
-    const FilmDetailsComponent = new FilmDetailsView(filmMock);
+    const filmCardComponent = new FilmCardView(filmMock);
+    const filmDetailsComponent = new FilmDetailsView(filmMock);
     const filmCardElement = FilmCardComponent.getElement();
     const filmDetailsElement = FilmDetailsComponent.getElement();
 
