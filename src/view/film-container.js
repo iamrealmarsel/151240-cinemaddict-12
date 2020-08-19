@@ -1,4 +1,5 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
+
 
 const createFilmContainerMarkup = () => {
   return `<section class="films">
@@ -11,27 +12,9 @@ const createFilmContainerMarkup = () => {
 };
 
 
-const FilmContainerView = class {
-  constructor() {
-    this._element = null;
-  }
-
+export default class FilmContainerView extends AbstractView {
   getMarkup() {
     return createFilmContainerMarkup();
   }
+}
 
-  getElement() {
-    if (this._element === null) {
-      this._element = createElement(this.getMarkup());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-};
-
-
-export default FilmContainerView;

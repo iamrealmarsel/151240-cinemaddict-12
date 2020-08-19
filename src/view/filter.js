@@ -1,4 +1,5 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
+
 
 const createFilterMarkup = (filmMocks) => {
 
@@ -12,7 +13,6 @@ const createFilterMarkup = (filmMocks) => {
     watchlist = value.isWatchlist ? watchlist + 1 : watchlist + 0;
   }
 
-
   return `<nav class="main-navigation">
       <div class="main-navigation__items">
         <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
@@ -25,28 +25,13 @@ const createFilterMarkup = (filmMocks) => {
 };
 
 
-const FilterView = class {
+export default class FilterView extends AbstractView {
   constructor(filmMocks) {
+    super();
     this._filmMocks = filmMocks;
-    this._element = null;
   }
 
   getMarkup() {
     return createFilterMarkup(this._filmMocks);
   }
-
-  getElement() {
-    if (this._element === null) {
-      this._element = createElement(this.getMarkup());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-};
-
-
-export default FilterView;
+}

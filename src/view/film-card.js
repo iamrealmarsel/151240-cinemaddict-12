@@ -1,4 +1,5 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
+
 
 const createFilmCardMarkup = (filmMock) => {
 
@@ -31,28 +32,16 @@ const createFilmCardMarkup = (filmMock) => {
 };
 
 
-const FilmCardView = class {
+export default class FilmCardView extends AbstractView {
+
   constructor(filmMock) {
+    super();
     this._filmMock = filmMock;
-    this._element = null;
   }
 
   getMarkup() {
     return createFilmCardMarkup(this._filmMock);
   }
 
-  getElement() {
-    if (this._element === null) {
-      this._element = createElement(this.getMarkup());
-    }
+}
 
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-};
-
-
-export default FilmCardView;

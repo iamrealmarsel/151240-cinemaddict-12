@@ -1,4 +1,5 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
+
 
 const createFilmMostCommentedMarkup = () => {
   return (`
@@ -11,27 +12,8 @@ const createFilmMostCommentedMarkup = () => {
 };
 
 
-const FilmContainerMostCommentedView = class {
-  constructor() {
-    this._element = null;
-  }
-
+export default class FilmContainerMostCommentedView extends AbstractView {
   getMarkup() {
     return createFilmMostCommentedMarkup();
   }
-
-  getElement() {
-    if (this._element === null) {
-      this._element = createElement(this.getMarkup());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-};
-
-
-export default FilmContainerMostCommentedView;
+}

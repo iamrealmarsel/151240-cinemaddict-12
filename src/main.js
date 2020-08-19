@@ -48,8 +48,8 @@ if (FILM_MOCKS.length === 0) {
   const renderFilmCards = (filmMock) => {
     const filmCardComponent = new FilmCardView(filmMock);
     const filmDetailsComponent = new FilmDetailsView(filmMock);
-    const filmCardElement = FilmCardComponent.getElement();
-    const filmDetailsElement = FilmDetailsComponent.getElement();
+    const filmCardElement = filmCardComponent.getElement();
+    const filmDetailsElement = filmDetailsComponent.getElement();
 
     const poster = filmCardElement.querySelector(`.film-card__poster`);
     const title = filmCardElement.querySelector(`.film-card__title`);
@@ -59,7 +59,7 @@ if (FILM_MOCKS.length === 0) {
     const onEscapeDown = (event) => {
       if (event.key === `Escape` || event.key === `Esc`) {
         event.preventDefault();
-        FilmDetailsComponent.removeElement();
+        filmDetailsComponent.removeElement();
         filmDetailsElement.remove();
         document.removeEventListener(`keydown`, onEscapeDown);
       }
@@ -83,7 +83,7 @@ if (FILM_MOCKS.length === 0) {
 
     closeButton.addEventListener(`click`, (event) => {
       event.preventDefault();
-      FilmDetailsComponent.removeElement();
+      filmDetailsComponent.removeElement();
       filmDetailsElement.remove();
       document.removeEventListener(`keydown`, onEscapeDown);
     });
