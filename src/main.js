@@ -1,5 +1,5 @@
 import {FILM_COUNT, FILM_COUNT_PER_STEP, FILM_EXTRA_COUNT, FILM_MOCKS} from './const.js';
-import {render} from './utils.js';
+import {render} from './utils/render.js';
 import {generateFilmCardMock} from './mock/film-card.js';
 import FilterView from './view/filter.js';
 import ButtonMoreView from './view/button-more.js';
@@ -26,10 +26,10 @@ for (let i = 0; i < FILM_COUNT; i++) {
 }
 
 
-render(new ProfileView(FILM_MOCKS).getElement(), headerElement, `beforeend`);
-render(new FilterView(FILM_MOCKS).getElement(), mainElement, `afterbegin`);
-render(new SortView().getElement(), mainElement, `beforeend`);
-render(new FooterStatsView(FILM_MOCKS).getElement(), footerStat, `beforeend`);
+render(new ProfileView(FILM_MOCKS), headerElement, `beforeend`);
+render(new FilterView(FILM_MOCKS), mainElement, `afterbegin`);
+render(new SortView(), mainElement, `beforeend`);
+render(new FooterStatsView(FILM_MOCKS), footerStat, `beforeend`);
 
 
 // взависимости от того есть ли фильмы или нет, меняется верстка
