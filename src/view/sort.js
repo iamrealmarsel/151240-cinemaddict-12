@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 const createSortMarkup = () => {
   return (`
     <ul class="sort">
@@ -9,4 +11,27 @@ const createSortMarkup = () => {
 };
 
 
-export {createSortMarkup};
+const Sort = class {
+  constructor() {
+    this._element = null;
+  }
+
+  getMarkup() {
+    return createSortMarkup();
+  }
+
+  getElement() {
+    if (this._element === null) {
+      this._element = createElement(this.getMarkup());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+};
+
+
+export default Sort;

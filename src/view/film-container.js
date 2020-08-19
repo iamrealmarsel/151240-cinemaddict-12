@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 const createFilmContainerMarkup = () => {
   return (`
     <section class="films">
@@ -11,4 +13,27 @@ const createFilmContainerMarkup = () => {
 };
 
 
-export {createFilmContainerMarkup};
+const FilmContainer = class {
+  constructor() {
+    this._element = null;
+  }
+
+  getMarkup() {
+    return createFilmContainerMarkup();
+  }
+
+  getElement() {
+    if (this._element === null) {
+      this._element = createElement(this.getMarkup());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+};
+
+
+export default FilmContainer;

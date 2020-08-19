@@ -1,8 +1,8 @@
+import {createElement} from '../utils.js';
 
+const createFilmCardMarkup = (filmMock) => {
 
-const createFilmCardMarkup = (filmMocks) => {
-
-  const {title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, releaseDate} = filmMocks;
+  const {title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, releaseDate} = filmMock;
   const controlActive = `film-card__controls-item--active`;
 
   const favorite = isFavorite ? controlActive : ``;
@@ -31,4 +31,28 @@ const createFilmCardMarkup = (filmMocks) => {
 };
 
 
-export {createFilmCardMarkup};
+const FilmCard = class {
+  constructor(filmMock) {
+    this._filmMock = filmMock;
+    this._element = null;
+  }
+
+  getMarkup() {
+    return createFilmCardMarkup(this._filmMock);
+  }
+
+  getElement() {
+    if (this._element === null) {
+      this._element = createElement(this.getMarkup());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+};
+
+
+export default FilmCard;
