@@ -26,7 +26,7 @@ for (let i = 0; i < FILM_COUNT; i++) {
 }
 
 
-render(new ProfileView(FILM_MOCKS), headerElement, `beforeend`);
+// render(new ProfileView(FILM_MOCKS), headerElement, `beforeend`);
 render(new FilterView(FILM_MOCKS), mainElement, `afterbegin`);
 render(new SortView(), mainElement, `beforeend`);
 render(new FooterStatsView(FILM_MOCKS), footerStat, `beforeend`);
@@ -48,47 +48,33 @@ if (FILM_MOCKS.length === 0) {
   const renderFilmCards = (filmMock) => {
     const filmCardComponent = new FilmCardView(filmMock);
     const filmDetailsComponent = new FilmDetailsView(filmMock);
-    const filmCardElement = filmCardComponent.getElement();
-    const filmDetailsElement = filmDetailsComponent.getElement();
-
-    const poster = filmCardElement.querySelector(`.film-card__poster`);
-    const title = filmCardElement.querySelector(`.film-card__title`);
-    const commentsLink = filmCardElement.querySelector(`.film-card__comments`);
-    const closeButton = filmDetailsElement.querySelector(`.film-details__close-btn`);
 
     const onEscapeDown = (event) => {
       if (event.key === `Escape` || event.key === `Esc`) {
         event.preventDefault();
+        filmDetailsComponent.getElement().remove();
         filmDetailsComponent.removeElement();
-        filmDetailsElement.remove();
         document.removeEventListener(`keydown`, onEscapeDown);
       }
     };
 
-    poster.addEventListener(`click`, () => {
-      render(filmDetailsElement, footerElement, `afterend`);
-      document.addEventListener(`keydown`, onEscapeDown);
-    });
 
-    title.addEventListener(`click`, () => {
-      render(filmDetailsElement, footerElement, `afterend`);
-      document.addEventListener(`keydown`, onEscapeDown);
-    });
-
-    commentsLink.addEventListener(`click`, (event) => {
+    filmDetailsComponent.setCloseHandler((event) => {
       event.preventDefault();
-      render(filmDetailsElement, footerElement, `afterend`);
-      document.addEventListener(`keydown`, onEscapeDown);
-    });
-
-    closeButton.addEventListener(`click`, (event) => {
-      event.preventDefault();
+      filmDetailsComponent.getElement().remove();
       filmDetailsComponent.removeElement();
-      filmDetailsElement.remove();
       document.removeEventListener(`keydown`, onEscapeDown);
+    })
+
+
+    filmCardComponent.setClickHandler((event) => {
+      event.preventDefault();
+      render(filmDetailsComponent.getElement(), footerElement, `afterend`);
+      document.addEventListener(`keydown`, onEscapeDown);
     });
 
-    render(filmCardElement, filmList, `beforeend`);
+
+    render(filmCardComponent.getElement(), filmList, `beforeend`);
   };
 
 
@@ -101,12 +87,12 @@ if (FILM_MOCKS.length === 0) {
   // описываем поведение кнопки Show More
   if (FILM_COUNT > FILM_COUNT_PER_STEP) {
 
-    const buttonMoreElement = new ButtonMoreView().getElement();
-    render(buttonMoreElement, filmList, `afterend`);
+    const buttonMoreComponent = new ButtonMoreView();
+    render(buttonMoreComponent.getElement(), filmList, `afterend`);
 
     let filmCountRender = FILM_COUNT_PER_STEP;
 
-    buttonMoreElement.addEventListener(`click`, (event) => {
+    buttonMoreComponent.setClickHandler((event) => {
       event.preventDefault();
 
       FILM_MOCKS
@@ -116,7 +102,7 @@ if (FILM_MOCKS.length === 0) {
       filmCountRender += FILM_COUNT_PER_STEP;
 
       if (filmCountRender >= FILM_COUNT) {
-        buttonMoreElement.remove();
+        buttonMoreComponent.getElement().remove();
       }
 
     });

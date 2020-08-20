@@ -137,6 +137,12 @@ export default class FilmDetailsView extends AbstractView {
   constructor(filmMock) {
     super();
     this._filmMock = filmMock;
+    this._callback = {};
+  }
+
+  setCloseHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._callback.click);
   }
 
   getMarkup() {
