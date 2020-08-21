@@ -12,6 +12,10 @@ export const render = (element, parentElement, place) => {
     element = element.getElement();
   }
 
+  if (parentElement instanceof AbstractView) {
+    parentElement = parentElement.getElement();
+  }
+
   switch (place) {
     case `beforebegin`:
       parentElement.before(element);
