@@ -17,6 +17,14 @@ export default class ButtonMoreView extends AbstractView {
     this.getElement().addEventListener(`click`, this._callback.click);
   }
 
+  removeClickHandler() {
+    this.getElement().removeEventListener(`click`, this._callback.click);
+  }
+
+  hasDomElemnt() {
+    return Boolean(document.querySelector(`.films-list__show-more`));
+  }
+
   getMarkup() {
     return createButtonMoreMarkup();
   }

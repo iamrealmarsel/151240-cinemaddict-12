@@ -5,7 +5,6 @@ import {render} from './utils/render.js';
 import FilterView from './view/filter.js';
 import ProfileView from './view/profile.js';
 import FooterStatsView from './view/footer-stat.js';
-import SortView from './view/sort.js';
 
 import MovieListPresenter from './presenter/movie-list.js';
 
@@ -20,13 +19,9 @@ for (let i = 0; i < FILM_COUNT; i++) {
 }
 
 
-const movieListPresenter = new MovieListPresenter(mainElement, FILM_MOCKS);
-
-
 render(new ProfileView(FILM_MOCKS), headerElement, `beforeend`);
 render(new FilterView(FILM_MOCKS), mainElement, `afterbegin`);
-render(new SortView(), mainElement, `beforeend`);
 render(new FooterStatsView(FILM_MOCKS), footerStatElement, `beforeend`);
 
 
-movieListPresenter.init();
+new MovieListPresenter(mainElement, FILM_MOCKS).renderMovie();
