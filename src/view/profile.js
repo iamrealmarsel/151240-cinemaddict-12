@@ -1,4 +1,5 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
+
 
 const createProfileMarkup = (filmMocks) => {
 
@@ -19,7 +20,6 @@ const createProfileMarkup = (filmMocks) => {
     profileRating = `movie buff`;
   }
 
-
   return `<section class="header__profile profile">
       <p class="profile__rating">${profileRating}</p>
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
@@ -27,28 +27,15 @@ const createProfileMarkup = (filmMocks) => {
 };
 
 
-const ProfileView = class {
+export default class ProfileView extends AbstractView {
   constructor(filmMocks) {
+    super();
     this._filmMocks = filmMocks;
-    this._element = null;
   }
 
   getMarkup() {
     return createProfileMarkup(this._filmMocks);
   }
-
-  getElement() {
-    if (this._element === null) {
-      this._element = createElement(this.getMarkup());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-};
+}
 
 
-export default ProfileView;

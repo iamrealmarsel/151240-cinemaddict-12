@@ -1,4 +1,5 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
+
 
 const createFilmDetailsMarkup = (filmMocks) => {
 
@@ -131,28 +132,23 @@ const createFilmDetailsMarkup = (filmMocks) => {
 };
 
 
-const FilmDetailsView = class {
+export default class FilmDetailsView extends AbstractView {
+
   constructor(filmMock) {
+    super();
     this._filmMock = filmMock;
-    this._element = null;
+    this._callback = {};
+  }
+
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._callback.click);
   }
 
   getMarkup() {
     return createFilmDetailsMarkup(this._filmMock);
   }
 
-  getElement() {
-    if (this._element === null) {
-      this._element = createElement(this.getMarkup());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
-};
+}
 
 
-export default FilmDetailsView;
