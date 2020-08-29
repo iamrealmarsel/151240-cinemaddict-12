@@ -108,7 +108,7 @@ const getRandomReleaseDate = () => {
 
 
 let numberId = 0;
-const generateId = () => numberId += 1;
+const generateId = () => (numberId += 1);
 
 
 const generateFilmCardMock = () => {

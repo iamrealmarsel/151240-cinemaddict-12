@@ -169,12 +169,14 @@ export default class FilmDetailsView extends AbstractView {
   setClickEmojiHandler() {
     this.getElement()
       .querySelectorAll(`.film-details__emoji-label`)
-      .forEach((element) => {element.addEventListener(`click`, this._onEmojiClick.bind(this))});
+      .forEach((element) => {
+        element.addEventListener(`click`, this._onEmojiClick.bind(this));
+      });
   }
 
   _onEmojiClick() {
     const partsOfImagePath = event.target.tagName === `LABEL` ? event.target.querySelector(`img`).src.split(`/`) : event.target.src.split(`/`);
-    this._comment.emoji = partsOfImagePath[partsOfImagePath.length-1];
+    this._comment.emoji = partsOfImagePath[partsOfImagePath.length - 1];
     this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = `<img src="images/emoji/${this._comment.emoji}" width="55" height="55" alt="emoji">`;
   }
 

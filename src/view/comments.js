@@ -3,9 +3,9 @@ import AbstractView from './abstract.js';
 
 const createCommentsMarkup = (comment) => {
 
-const {emoji, text, author, date} = comment;
+  const {emoji, text, author, date} = comment;
 
-return  `
+  return `
     <li class="film-details__comment">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji-smile">

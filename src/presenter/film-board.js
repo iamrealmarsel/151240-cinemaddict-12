@@ -1,4 +1,4 @@
-import {FILM_COUNT, FILM_COUNT_PER_STEP, FILM_EXTRA_COUNT, SortBy} from '../const.js';
+import {FILM_COUNT, FILM_COUNT_PER_STEP, SortBy} from '../const.js';
 import {render} from '../utils/render.js';
 import FilmContainerView from '../view/film-container.js';
 import FilmWrapView from '../view/film-wrap.js';
@@ -52,6 +52,12 @@ export default class FilmBoardPresenter {
 
     // this._renderExtraFilms();
 
+    // console.log(this._filmCardPresenter)
+  }
+
+
+  _closePopup() {
+    Object.values(this._filmCardPresenter).forEach((filmCardPresenter) => filmCardPresenter.closePopup());
   }
 
 
@@ -109,6 +115,7 @@ export default class FilmBoardPresenter {
   _renderFilmCard(film) {
     const filmCardPresenter = new FilmCardPresenter(this._mainElement, this._filmListView, this._updateData.bind(this));
     filmCardPresenter.init(film);
+    filmCardPresenter.setClosePopup(this._closePopup.bind(this));
     this._filmCardPresenter[film.id] = filmCardPresenter;
   }
 

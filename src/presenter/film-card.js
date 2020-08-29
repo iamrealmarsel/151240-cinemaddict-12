@@ -1,6 +1,5 @@
 import FilmCardView from '../view/film-card.js';
 import FilmDetailsView from '../view/film-details.js';
-import CommentsView from '../view/comments.js';
 import {render} from '../utils/render.js';
 
 
@@ -9,6 +8,7 @@ export default class FilmCardPresenter {
     this._filmListView = filmListView;
     this._mainElement = mainElement;
     this._updateData = updateData;
+    this._callback = {};
     // this._comment = {};
   }
 
@@ -76,39 +76,51 @@ export default class FilmCardPresenter {
       this._filmDetailsView.getElement().remove();
       document.removeEventListener(`keydown`, this._onEscapeDown);
     }
-  };
+  }
 
   _onCloseClick(event) {
     event.preventDefault();
     this._filmDetailsView.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscapeDown);
-  };
+  }
 
   _onFilmCardClick(event) {
     event.preventDefault();
+
+    this._callback.closePopup();
 
     render(this._filmDetailsView, this._mainElement, `afterend`);
     this._filmDetailsView.renderComments(this._film.comments);
 
     document.addEventListener(`keydown`, this._onEscapeDown.bind(this));
-  };
+  }
+
+
+  setClosePopup(callback) {
+    this._callback.closePopup = callback;
+  }
+
+
+  closePopup() {
+    this._filmDetailsView.getElement().remove();
+    document.removeEventListener(`keydown`, this._onEscapeDown);
+  }
 
 
   _handleWatchlistClick() {
-    this._film.isWatchlist = !this._film.isWatchlist
+    this._film.isWatchlist = !this._film.isWatchlist;
     this._updateData(this._film);
   }
 
   _handleHistoryClick() {
-    this._film.isWatched = !this._film.isWatched
+    this._film.isWatched = !this._film.isWatched;
     this._updateData(this._film);
   }
 
   _handleFavoriteClick() {
-    this._film.isFavorite = !this._film.isFavorite
+    this._film.isFavorite = !this._film.isFavorite;
     this._updateData(this._film);
   }
-
 
 
 }
