@@ -19,7 +19,7 @@ const convertTotalMinutesToHoursMinutes = (totalMinutes) => {
   return `${hours}h ${minutes}m`;
 };
 
-const getRandomElement = (elements) => {
+export const getRandomElement = (elements) => {
   return elements[getRandomInteger(0, elements.length - 1)];
 };
 
@@ -107,8 +107,13 @@ const getRandomReleaseDate = () => {
 };
 
 
+let numberId = 0;
+const generateId = () => numberId += 1;
+
+
 const generateFilmCardMock = () => {
   return {
+    id: generateId(),
     title: getRandomElement(TITLES),
     poster: getRandomElement(POSTERS),
     description: getRandomDescription(),

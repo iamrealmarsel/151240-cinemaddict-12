@@ -1,9 +1,13 @@
 import AbstractView from './abstract.js';
+import CommentsView from './comments.js';
+import {render} from '../utils/render.js';
+import {getRandomElement} from '../mock/film-card.js';
 
+const AUTHORS = [`Tim Macoveev`, `John Doe`, `Gudini`];
 
 const createFilmDetailsMarkup = (filmMocks) => {
 
-  const {title, poster, description, comments, rate, duration, genres, releaseDate, director, writers, actors, country, age} = filmMocks;
+  const {title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, genres, releaseDate, director, writers, actors, country, age} = filmMocks;
   const dateRelease = releaseDate.toLocaleString(`ru-RU`, {month: `long`, year: `numeric`, day: `numeric`});
 
   const genresMarkUp =
@@ -11,25 +15,6 @@ const createFilmDetailsMarkup = (filmMocks) => {
       <td class="film-details__cell">
       ${genres.map((genre) => `<span class="film-details__genre">${genre}</span>`).join(``)}
       </td>`;
-
-  const commentsMarkup =
-    `<ul class="film-details__comments-list">
-      ${comments.map(({emoji, text, author, date}) =>
-    `<li class="film-details__comment">
-          <span class="film-details__comment-emoji">
-            <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji-smile">
-          </span>
-          <div>
-            <p class="film-details__comment-text">${text}</p>
-            <p class="film-details__comment-info">
-              <span class="film-details__comment-author">${author}</span>
-              <span class="film-details__comment-day">${date}</span>
-              <button class="film-details__comment-delete">Delete</button>
-            </p>
-          </div>
-        </li>`).join(``)}
-    </ul>`;
-
 
   return `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -87,11 +72,11 @@ const createFilmDetailsMarkup = (filmMocks) => {
             </div>
           </div>
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWatchlist ? `checked` : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatched ? `checked` : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorite ? `checked` : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
@@ -99,7 +84,9 @@ const createFilmDetailsMarkup = (filmMocks) => {
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
-      ${commentsMarkup}
+            <ul class="film-details__comments-list">
+
+            </ul>
 
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label"></div>
@@ -138,12 +125,95 @@ export default class FilmDetailsView extends AbstractView {
     super();
     this._filmMock = filmMock;
     this._callback = {};
+    this._comment = {};
   }
+
 
   setClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._callback.click);
   }
+
+
+  setClickWatchlistHandler(callback) {
+    this._callback.clickWatchlist = callback;
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._onWatchlistClick.bind(this));
+  }
+
+  _onWatchlistClick() {
+    event.preventDefault();
+    this._callback.clickWatchlist();
+  }
+
+  setClickHistoryHandler(callback) {
+    this._callback.clickHistory = callback;
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._onHistoryClick.bind(this));
+  }
+
+  _onHistoryClick() {
+    event.preventDefault();
+    this._callback.clickHistory();
+  }
+
+  setClickFavoriteHandler(callback) {
+    this._callback.clickFavorite = callback;
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._onFavoriteClick.bind(this));
+  }
+
+  _onFavoriteClick() {
+    event.preventDefault();
+    this._callback.clickFavorite();
+  }
+
+
+  setClickEmojiHandler() {
+    this.getElement()
+      .querySelectorAll(`.film-details__emoji-label`)
+      .forEach((element) => {element.addEventListener(`click`, this._onEmojiClick.bind(this))});
+  }
+
+  _onEmojiClick() {
+    const partsOfImagePath = event.target.tagName === `LABEL` ? event.target.querySelector(`img`).src.split(`/`) : event.target.src.split(`/`);
+    this._comment.emoji = partsOfImagePath[partsOfImagePath.length-1];
+    this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = `<img src="images/emoji/${this._comment.emoji}" width="55" height="55" alt="emoji">`;
+  }
+
+  setCommentDeleteHandler(callback) {
+    this._callback.deleteComment = callback;
+  }
+
+  renderComments(comments) {
+    this.getElement().querySelector(`.film-details__comments-list`).innerHTML = ``;
+    comments.forEach((comment) => this._renderComment(comment));
+  }
+
+  _renderComment(comment) {
+    const commentsView = new CommentsView(comment);
+    commentsView.setCommentDeleteHandler(this._callback.deleteComment);
+    render(commentsView, this.getElement().querySelector(`.film-details__comments-list`), `beforeend`);
+  }
+
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector(`.film-details__new-comment`).addEventListener(`keydown`, this._onFormSubmit.bind(this));
+  }
+
+  _onFormSubmit() {
+    if (event.keyCode === 13 && event.metaKey) {
+      this._comment.text = this.getElement().querySelector(`.film-details__comment-input`).value;
+      if (this._comment.text === `` || this._comment.emoji === undefined) {
+        return;
+      }
+
+      const dateNow = new Date();
+      this._comment.date = `${dateNow.getFullYear()}/${dateNow.getMonth() + 1}/${dateNow.getDate()} ${dateNow.getHours()}:${dateNow.getMinutes()}`;
+      this._comment.author = getRandomElement(AUTHORS);
+
+      this._callback.formSubmit(this._comment);
+    }
+  }
+
 
   getMarkup() {
     return createFilmDetailsMarkup(this._filmMock);
