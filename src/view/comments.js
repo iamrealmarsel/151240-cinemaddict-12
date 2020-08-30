@@ -1,9 +1,11 @@
 import AbstractView from './abstract.js';
+import moment from "moment";
 
 
 const createCommentsMarkup = (comment) => {
 
-  const {emoji, text, author, date} = comment;
+  let {emoji, text, author, date} = comment;
+  date = moment(date).fromNow();
 
   return `
     <li class="film-details__comment">

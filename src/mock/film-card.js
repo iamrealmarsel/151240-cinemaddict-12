@@ -1,3 +1,4 @@
+
 const POSTERS = [`made-for-each-other.png`, `popeye-meets-sinbad.png`, `sagebrush-trail.jpg`, `santa-claus-conquers-the-martians.jpg`, `the-dance-of-life.jpg`, `the-great-flamarion.jpg`, `the-man-with-the-golden-arm.jpg`];
 const TITLES = [`The Dance of Life`, `Sagebrush Trail`, `The Man with the Golden Arm`, `Santa Claus Conquers the Martians`, `Popeye the Sailor Meets Sindbad the Sailor`, `The Great Flamarion`, `Made for Each Other`];
 const DIRECTOR = [`Anthony Mann`, `Anne Wigton`, `Heinz Herald`, `Richard Weil`, `Erich von Stroheim`];
@@ -6,6 +7,8 @@ const ACTORS = [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`];
 const COUNTRY = [`USA`, `Thailand`, `England`, `France`];
 const AGE = [`6+`, `12+`, `16+`, `18+`];
 
+// console.log(moment().format());
+// console.log(new Date());
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -35,33 +38,33 @@ const getRandomDescription = () => {
 
 const generateRandomDate = () => {
 
-  const SEVEN_DAYS_IN_MS = 604800000;
+  // const SEVEN_DAYS_IN_MS = 604800000;
   const DAYS_GAP = 365;
-  const today = new Date();
+  // const today = new Date();
   const randomDate = new Date();
   randomDate.setDate(randomDate.getDate() - getRandomInteger(0, DAYS_GAP));
 
-  let stringDate;
+  // let stringDate;
 
-  if ((today.getTime() - randomDate.getTime()) <= SEVEN_DAYS_IN_MS) {
-    const gapDaysOfMonth = today.getDate() - randomDate.getDate();
+  // if ((today.getTime() - randomDate.getTime()) <= SEVEN_DAYS_IN_MS) {
+  //   const gapDaysOfMonth = today.getDate() - randomDate.getDate();
 
-    switch (gapDaysOfMonth) {
-      case 0:
-        stringDate = `Today`;
-        break;
-      case 1:
-        stringDate = `Yesterday`;
-        break;
-      default:
-        stringDate = `${gapDaysOfMonth} days ago`;
-    }
+  //   switch (gapDaysOfMonth) {
+  //     case 0:
+  //       stringDate = `Today`;
+  //       break;
+  //     case 1:
+  //       stringDate = `Yesterday`;
+  //       break;
+  //     default:
+  //       stringDate = `${gapDaysOfMonth} days ago`;
+  //   }
 
-  } else {
-    stringDate = `${randomDate.getFullYear()}/${randomDate.getMonth() + 1}/${randomDate.getDate()} ${randomDate.getHours()}:${randomDate.getMinutes()}`;
-  }
+  // } else {
+  //   stringDate = `${randomDate.getFullYear()}/${randomDate.getMonth() + 1}/${randomDate.getDate()} ${randomDate.getHours()}:${randomDate.getMinutes()}`;
+  // }
 
-  return stringDate;
+  return randomDate;
 };
 
 

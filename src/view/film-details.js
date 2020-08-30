@@ -208,10 +208,8 @@ export default class FilmDetailsView extends AbstractView {
         return;
       }
 
-      const dateNow = new Date();
-      this._comment.date = `${dateNow.getFullYear()}/${dateNow.getMonth() + 1}/${dateNow.getDate()} ${dateNow.getHours()}:${dateNow.getMinutes()}`;
+      this._comment.date = Date.now();
       this._comment.author = getRandomElement(AUTHORS);
-
       this._callback.formSubmit(this._comment);
     }
   }
