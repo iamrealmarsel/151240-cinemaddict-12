@@ -2,6 +2,7 @@ import AbstractView from './abstract.js';
 import CommentsView from './comments.js';
 import {render} from '../utils/render.js';
 import {getRandomElement} from '../mock/film-card.js';
+import {UpdateType} from '../const.js';
 
 const AUTHORS = [`Tim Macoveev`, `John Doe`, `Gudini`];
 
@@ -142,7 +143,7 @@ export default class FilmDetailsView extends AbstractView {
 
   _onWatchlistClick() {
     event.preventDefault();
-    this._callback.clickWatchlist();
+    this._callback.clickWatchlist(UpdateType.MINOR);
   }
 
   setClickHistoryHandler(callback) {
@@ -152,7 +153,7 @@ export default class FilmDetailsView extends AbstractView {
 
   _onHistoryClick() {
     event.preventDefault();
-    this._callback.clickHistory();
+    this._callback.clickHistory(UpdateType.MINOR);
   }
 
   setClickFavoriteHandler(callback) {
@@ -162,7 +163,7 @@ export default class FilmDetailsView extends AbstractView {
 
   _onFavoriteClick() {
     event.preventDefault();
-    this._callback.clickFavorite();
+    this._callback.clickFavorite(UpdateType.MINOR);
   }
 
 
@@ -210,7 +211,7 @@ export default class FilmDetailsView extends AbstractView {
 
       this._comment.date = Date.now();
       this._comment.author = getRandomElement(AUTHORS);
-      this._callback.formSubmit(this._comment);
+      this._callback.formSubmit(this._comment, UpdateType.MINOR);
     }
   }
 
