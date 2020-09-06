@@ -1,11 +1,13 @@
 import AbstractView from './abstract.js';
 import moment from "moment";
-
+import {UpdateType} from '../const.js';
+import he from "he";
 
 const createCommentsMarkup = (comment) => {
 
   let {emoji, text, author, date} = comment;
   date = moment(date).fromNow();
+  text = he.encode(text);
 
   return `
     <li class="film-details__comment">
@@ -39,7 +41,7 @@ export default class CommentsView extends AbstractView {
 
   _onDeleteCommentClick() {
     event.preventDefault();
-    this._callback(this._comment);
+    this._callback(this._comment, UpdateType.MINOR);
   }
 
 

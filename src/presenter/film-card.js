@@ -9,30 +9,27 @@ export default class FilmCardPresenter {
     this._mainElement = mainElement;
     this._updateData = updateData;
     this._callback = {};
-    // this._comment = {};
   }
 
   init(film) {
-    this._film = film;
 
-    this._createFilmCardInstance();
+    this._createFilmCardInstance(film);
 
     render(this._filmCardView, this._filmListView, `beforeend`);
 
     this._filmCardViewOld = this._filmCardView;
     this._filmDetailsViewOld = this._filmDetailsView;
 
-    // console.log(this._film);
-
   }
 
 
-  updateFilmCard() {
-    this._createFilmCardInstance();
+  updateFilmCard(film) {
+
+    this._createFilmCardInstance(film);
 
     this._filmCardViewOld.getElement().replaceWith(this._filmCardView.getElement());
     this._filmDetailsViewOld.getElement().replaceWith(this._filmDetailsView.getElement());
-    this._filmDetailsView.renderComments(this._film.comments);
+    this._filmDetailsView.renderComments(film.comments);
 
     this._filmCardViewOld = this._filmCardView;
     this._filmDetailsViewOld = this._filmDetailsView;
@@ -40,16 +37,21 @@ export default class FilmCardPresenter {
   }
 
 
-  _createFilmCardInstance() {
+  _createFilmCardInstance(film) {
+
+    this._film = film;
+
     this._filmCardView = new FilmCardView(this._film);
     this._filmDetailsView = new FilmDetailsView(this._film);
 
     this._filmCardView.setClickHandler(this._onFilmCardClick.bind(this));
+
     this._filmCardView.setClickWatchlistHandler(this._handleWatchlistClick.bind(this));
     this._filmCardView.setClickHistoryHandler(this._handleHistoryClick.bind(this));
     this._filmCardView.setClickFavoriteHandler(this._handleFavoriteClick.bind(this));
 
     this._filmDetailsView.setClickHandler(this._onCloseClick.bind(this));
+
     this._filmDetailsView.setClickWatchlistHandler(this._handleWatchlistClick.bind(this));
     this._filmDetailsView.setClickHistoryHandler(this._handleHistoryClick.bind(this));
     this._filmDetailsView.setClickFavoriteHandler(this._handleFavoriteClick.bind(this));
@@ -59,15 +61,15 @@ export default class FilmCardPresenter {
     this._filmDetailsView.setCommentDeleteHandler(this._onCommentDeleteClick.bind(this));
   }
 
-  _onCommentDeleteClick(comment) {
+  _onCommentDeleteClick(comment, updateType) {
     const indexComment = this._film.comments.indexOf(comment);
     this._film.comments.splice(indexComment, 1);
-    this._updateData(this._film);
+    this._updateData(this._film, updateType);
   }
 
-  _onFormSubmit(comment) {
+  _onFormSubmit(comment, updateType) {
     this._film.comments.push(comment);
-    this._updateData(this._film);
+    this._updateData(this._film, updateType);
   }
 
   _onEscapeDown(event) {
@@ -107,19 +109,23 @@ export default class FilmCardPresenter {
   }
 
 
-  _handleWatchlistClick() {
-    this._film.isWatchlist = !this._film.isWatchlist;
-    this._updateData(this._film);
+  _handleWatchlistClick(updateType) {
+    // console.log(updateType);
+    const newFilm = Object.assign({}, this._film);
+    newFilm.isWatchlist = !newFilm.isWatchlist;
+    this._updateData(newFilm, updateType);
   }
 
-  _handleHistoryClick() {
-    this._film.isWatched = !this._film.isWatched;
-    this._updateData(this._film);
+  _handleHistoryClick(updateType) {
+    const newFilm = Object.assign({}, this._film);
+    newFilm.isWatched = !newFilm.isWatched;
+    this._updateData(newFilm, updateType);
   }
 
-  _handleFavoriteClick() {
-    this._film.isFavorite = !this._film.isFavorite;
-    this._updateData(this._film);
+  _handleFavoriteClick(updateType) {
+    const newFilm = Object.assign({}, this._film);
+    newFilm.isFavorite = !newFilm.isFavorite;
+    this._updateData(newFilm, updateType);
   }
 
 
