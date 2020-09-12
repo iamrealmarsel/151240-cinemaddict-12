@@ -1,15 +1,20 @@
 import AbstractView from './abstract.js';
+import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
 
 
-const createFilmCardMarkup = (filmMock) => {
+const createFilmCardMarkup = (film) => {
 
-  const {title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, releaseDate} = filmMock;
+  let {title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, releaseDate} = film;
   const controlActive = `film-card__controls-item--active`;
+  // console.log(film);
+  // console.log(film.comments);
+  // console.log(film.comments.length);
 
   const favorite = isFavorite ? controlActive : ``;
   const watched = isWatched ? controlActive : ``;
   const watchlist = isWatchlist ? controlActive : ``;
   const releaseYear = releaseDate.getFullYear();
+  duration = convertTotalMinutesToHoursMinutes(duration);
 
   return `<article class="film-card">
       <h3 class="film-card__title">${title}</h3>
@@ -19,7 +24,7 @@ const createFilmCardMarkup = (filmMock) => {
         <span class="film-card__duration">${duration}</span>
         <span class="film-card__genre">Cartoon</span>
       </p>
-      <img src="./images/posters/${poster}" alt="" class="film-card__poster">
+      <img src="./${poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${description}</p>
       <a class="film-card__comments">${comments.length} comments</a>
       <form class="film-card__controls">
@@ -34,9 +39,9 @@ const createFilmCardMarkup = (filmMock) => {
 
 export default class FilmCardView extends AbstractView {
 
-  constructor(filmMock) {
+  constructor(film) {
     super();
-    this._filmMock = filmMock;
+    this._film = film;
     this._callback = {};
   }
 
@@ -83,7 +88,7 @@ export default class FilmCardView extends AbstractView {
 
 
   getMarkup() {
-    return createFilmCardMarkup(this._filmMock);
+    return createFilmCardMarkup(this._film);
   }
 
 }

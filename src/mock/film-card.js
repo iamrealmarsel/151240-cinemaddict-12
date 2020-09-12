@@ -38,31 +38,9 @@ const getRandomDescription = () => {
 
 const generateRandomDate = () => {
 
-  // const SEVEN_DAYS_IN_MS = 604800000;
   const DAYS_GAP = 365;
-  // const today = new Date();
   const randomDate = new Date();
   randomDate.setDate(randomDate.getDate() - getRandomInteger(0, DAYS_GAP));
-
-  // let stringDate;
-
-  // if ((today.getTime() - randomDate.getTime()) <= SEVEN_DAYS_IN_MS) {
-  //   const gapDaysOfMonth = today.getDate() - randomDate.getDate();
-
-  //   switch (gapDaysOfMonth) {
-  //     case 0:
-  //       stringDate = `Today`;
-  //       break;
-  //     case 1:
-  //       stringDate = `Yesterday`;
-  //       break;
-  //     default:
-  //       stringDate = `${gapDaysOfMonth} days ago`;
-  //   }
-
-  // } else {
-  //   stringDate = `${randomDate.getFullYear()}/${randomDate.getMonth() + 1}/${randomDate.getDate()} ${randomDate.getHours()}:${randomDate.getMinutes()}`;
-  // }
 
   return randomDate;
 };
@@ -109,6 +87,7 @@ const getRandomReleaseDate = () => {
   return randomReleaseDate;
 };
 
+// console.log(getRandomReleaseDate());
 
 let numberId = 0;
 const generateId = () => (numberId += 1);

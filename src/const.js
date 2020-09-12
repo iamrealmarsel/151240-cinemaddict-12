@@ -13,7 +13,8 @@ export const SortBy = {
 
 export const UpdateType = {
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  INIT: `INIT`
 };
 
 

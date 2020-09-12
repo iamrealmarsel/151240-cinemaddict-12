@@ -1,15 +1,18 @@
 import AbstractView from './abstract.js';
 import CommentsView from './comments.js';
 import {render} from '../utils/render.js';
+import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
 import {getRandomElement} from '../mock/film-card.js';
 import {UpdateType} from '../const.js';
 
 const AUTHORS = [`Tim Macoveev`, `John Doe`, `Gudini`];
 
-const createFilmDetailsMarkup = (filmMocks) => {
+const createFilmDetailsMarkup = (film) => {
 
-  const {title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, genres, releaseDate, director, writers, actors, country, age} = filmMocks;
+  let {title, alternativeTitle, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, genres, releaseDate, director, writers, actors, country, age} = film;
   const dateRelease = releaseDate.toLocaleString(`ru-RU`, {month: `long`, year: `numeric`, day: `numeric`});
+  duration = convertTotalMinutesToHoursMinutes(duration);
+
 
   const genresMarkUp =
      `<td class="film-details__term">Genre${genres.length > 1 ? `s` : ``}</td>
@@ -25,14 +28,14 @@ const createFilmDetailsMarkup = (filmMocks) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+              <img class="film-details__poster-img" src="./${poster}" alt="">
               <p class="film-details__age">${age}</p>
             </div>
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${title}</h3>
-                  <p class="film-details__title-original">${title}</p>
+                  <p class="film-details__title-original">Original: ${alternativeTitle}</p>
                 </div>
                 <div class="film-details__rating">
                   <p class="film-details__total-rating">${rate}</p>
@@ -122,9 +125,9 @@ const createFilmDetailsMarkup = (filmMocks) => {
 
 export default class FilmDetailsView extends AbstractView {
 
-  constructor(filmMock) {
+  constructor(film) {
     super();
-    this._filmMock = filmMock;
+    this._film = film;
     this._callback = {};
     this._comment = {};
   }
@@ -217,7 +220,7 @@ export default class FilmDetailsView extends AbstractView {
 
 
   getMarkup() {
-    return createFilmDetailsMarkup(this._filmMock);
+    return createFilmDetailsMarkup(this._film);
   }
 
 }

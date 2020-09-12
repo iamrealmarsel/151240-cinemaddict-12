@@ -12,8 +12,10 @@ export default class FilmsModel extends Observer {
     return this._films;
   }
 
-  setFilms(films) {
-    this._films = films;
+  setFilms(films, updateType) {
+    this._films = films.slice();
+
+    this._notify(null, updateType);
   }
 
   updateFilms(newFilm, updateType) {
@@ -24,8 +26,6 @@ export default class FilmsModel extends Observer {
       }
       return false;
     });
-
-    // console.log(updateType);
 
     this._notify(newFilm, updateType);
   }

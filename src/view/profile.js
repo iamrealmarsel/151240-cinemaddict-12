@@ -1,10 +1,10 @@
 import AbstractView from './abstract.js';
 
 
-const createProfileMarkup = (filmMocks) => {
+const createProfileMarkup = (film) => {
 
   let watched = 0;
-  for (const value of filmMocks) {
+  for (const value of film) {
     watched = value.isWatched ? watched + 1 : watched + 0;
   }
 
@@ -28,13 +28,13 @@ const createProfileMarkup = (filmMocks) => {
 
 
 export default class ProfileView extends AbstractView {
-  constructor(filmMocks) {
+  constructor(film) {
     super();
-    this._filmMocks = filmMocks;
+    this._film = film;
   }
 
   getMarkup() {
-    return createProfileMarkup(this._filmMocks);
+    return createProfileMarkup(this._film);
   }
 }
 
