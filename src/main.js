@@ -25,7 +25,7 @@ const filmsModel = new FilmsModel();
 
 api.getFilms()
   .then((films) => {
-    // console.log(films);
+    console.log(films);
     filmsModel.setFilms(films, UpdateType.INIT);
   })
 .catch(() => {

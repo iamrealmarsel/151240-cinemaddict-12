@@ -9,16 +9,19 @@ export default class Api {
 
 
   getFilms() {
-    return this._load({url: `movies`})
-      .then(Api.toJSON)
-      .then(async (films) => {
-        let adaptedFilms = [];
-        for (let film of films) {
-          let adaptedFilm = await this._adaptToClient(film)
-          adaptedFilms.push(adaptedFilm);
-        }
-        return adaptedFilms;
-      });
+    return this._load({
+      url: `movies`,
+      method: `GET`,
+    })
+    .then(Api.toJSON)
+    .then(async (films) => {
+      let adaptedFilms = [];
+      for (let film of films) {
+        let adaptedFilm = await this._adaptToClient(film)
+        adaptedFilms.push(adaptedFilm);
+      }
+      return adaptedFilms;
+    });
   }
 
 
@@ -31,6 +34,111 @@ export default class Api {
     })
       .then(Api.toJSON)
       .then(this._adaptToClient.bind(this));
+  }
+
+
+  addComment(film) {
+    return this._load({
+      url: `comments/${film.id}`,
+      method: `POST`,
+      body: JSON.stringify(this._adaptCommentsToServer(film.comments)),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON)
+      .then(this._adaptCommentsToClient.bind(this));
+  }
+
+
+  deleteComment(comment) {
+    return this._load({
+      url: `ccccomments/${comment.id}`,
+      method: `DELETE`
+    });
+  }
+
+
+  _adaptCommentsToClient(response) {
+    const film = response.movie;
+    const comments = response.comments;
+
+    const adaptedFilm = Object.assign(
+      {},
+      film.film_info,
+      {
+        id: film.id,
+        rate: film.film_info.total_rating,
+        duration: film.film_info.runtime,
+        releaseDate: new Date(film.film_info.release.date),
+        country: film.film_info.release.release_country,
+        genres: film.film_info.genre,
+        age: film.film_info.age_rating,
+        alternativeTitle: film.film_info.alternative_title,
+        isFavorite: film.user_details.favorite,
+        isWatched: film.user_details.already_watched,
+        isWatchlist: film.user_details.watchlist,
+        watchingDate: new Date(film.user_details.watching_date),
+        comments,
+      }
+    );
+    delete adaptedFilm.total_rating;
+    delete adaptedFilm.runtime;
+    delete adaptedFilm.genre;
+    delete adaptedFilm.age_rating;
+    delete adaptedFilm.release;
+    delete adaptedFilm.alternative_title;
+
+    console.log(adaptedFilm);
+
+    return adaptedFilm;
+  }
+
+
+
+  _adaptToClient(film) {
+    return this._getComments(film.id).then((comments) => {
+      const adaptedFilm = Object.assign(
+        {},
+        film.film_info,
+        {
+          id: film.id,
+          rate: film.film_info.total_rating,
+          duration: film.film_info.runtime,
+          releaseDate: new Date(film.film_info.release.date),
+          country: film.film_info.release.release_country,
+          genres: film.film_info.genre,
+          age: film.film_info.age_rating,
+          alternativeTitle: film.film_info.alternative_title,
+          isFavorite: film.user_details.favorite,
+          isWatched: film.user_details.already_watched,
+          isWatchlist: film.user_details.watchlist,
+          watchingDate: new Date(film.user_details.watching_date),
+          comments,
+        }
+      );
+      delete adaptedFilm.total_rating;
+      delete adaptedFilm.runtime;
+      delete adaptedFilm.genre;
+      delete adaptedFilm.age_rating;
+      delete adaptedFilm.release;
+      delete adaptedFilm.alternative_title;
+
+    // console.log(adaptedFilm);
+
+      return adaptedFilm;
+    });
+  }
+
+
+  _adaptCommentsToServer(comments) {
+    const comment = comments.pop();
+    const adaptedComment = Object.assign(
+      {},
+      comment,
+      {
+        "date": new Date(comment.date).toISOString()
+      }
+    )
+    return adaptedComment;
   }
 
 
@@ -89,49 +197,17 @@ export default class Api {
   }
 
 
-  _adaptToClient(film) {
-    return this._getComments(film.id).then((comments) => {
-      const adaptedFilm = Object.assign(
-        {},
-        film.film_info,
-        {
-          id: film.id,
-          rate: film.film_info.total_rating,
-          duration: film.film_info.runtime,
-          releaseDate: new Date(film.film_info.release.date),
-          country: film.film_info.release.release_country,
-          genres: film.film_info.genre,
-          age: film.film_info.age_rating,
-          alternativeTitle: film.film_info.alternative_title,
-          isFavorite: film.user_details.favorite,
-          isWatched: film.user_details.already_watched,
-          isWatchlist: film.user_details.watchlist,
-          watchingDate: new Date(film.user_details.watching_date),
-          comments,
-        }
-      );
-      delete adaptedFilm.total_rating;
-      delete adaptedFilm.runtime;
-      delete adaptedFilm.genre;
-      delete adaptedFilm.age_rating;
-      delete adaptedFilm.release;
-      delete adaptedFilm.alternative_title;
-
-    console.log(adaptedFilm);
-
-      return adaptedFilm;
-    });
-  }
-
 
   _getComments(id) {
-    return this._load({url: `comments/${id}`}).then(Api.toJSON);
+    return this._load({url: `comments/${id}`, method: `GET`}).then(Api.toJSON);
   }
 
 
-  _load({url, method = `GET`, body = null, headers = new Headers()}) {
+  _load({url, method, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
-    return fetch(`${this._endPoint}/${url}`, {method, body, headers}).then(Api.checkStatus).catch(Api.catchError);
+    return fetch(`${this._endPoint}/${url}`, {method, body, headers})
+      .then(Api.checkStatus)
+      .catch(Api.catchError);
   }
 
   static checkStatus(response) {
@@ -143,11 +219,13 @@ export default class Api {
   }
 
   static catchError(error) {
-    return error;
+    console.log(`ошибка catchError`, error)
+    throw error;
   }
 
   static toJSON(response) {
-    return response.json();
+    // console.log(x)
+     return response.json();
   }
 
 

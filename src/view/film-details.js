@@ -2,10 +2,8 @@ import AbstractView from './abstract.js';
 import CommentsView from './comments.js';
 import {render} from '../utils/render.js';
 import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
-import {getRandomElement} from '../mock/film-card.js';
-import {UpdateType} from '../const.js';
+import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 
-const AUTHORS = [`Tim Macoveev`, `John Doe`, `Gudini`];
 
 const createFilmDetailsMarkup = (film) => {
 
@@ -130,6 +128,7 @@ export default class FilmDetailsView extends AbstractView {
     this._film = film;
     this._callback = {};
     this._comment = {};
+    this._commentsViews = [];
   }
 
 
@@ -180,8 +179,9 @@ export default class FilmDetailsView extends AbstractView {
 
   _onEmojiClick() {
     const partsOfImagePath = event.target.tagName === `LABEL` ? event.target.querySelector(`img`).src.split(`/`) : event.target.src.split(`/`);
-    this._comment.emoji = partsOfImagePath[partsOfImagePath.length - 1];
-    this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = `<img src="images/emoji/${this._comment.emoji}" width="55" height="55" alt="emoji">`;
+    const emotionFullName = partsOfImagePath[partsOfImagePath.length - 1];
+    this._comment.emotion = emotionFullName.slice(0, -4);
+    this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = `<img src="images/emoji/${this._comment.emotion}.png" width="55" height="55" alt="emoji">`;
   }
 
   setCommentDeleteHandler(callback) {
@@ -196,6 +196,7 @@ export default class FilmDetailsView extends AbstractView {
   _renderComment(comment) {
     const commentsView = new CommentsView(comment);
     commentsView.setCommentDeleteHandler(this._callback.deleteComment);
+    this._commentsViews[comment.id] = commentsView;
     render(commentsView, this.getElement().querySelector(`.film-details__comments-list`), `beforeend`);
   }
 
@@ -207,15 +208,36 @@ export default class FilmDetailsView extends AbstractView {
 
   _onFormSubmit() {
     if (event.keyCode === 13 && event.metaKey) {
-      this._comment.text = this.getElement().querySelector(`.film-details__comment-input`).value;
-      if (this._comment.text === `` || this._comment.emoji === undefined) {
+      this._comment.comment = this.getElement().querySelector(`.film-details__comment-input`).value;
+      if (this._comment.comment === `` || this._comment.emotion === undefined) {
+        this.errorShake();
         return;
       }
 
       this._comment.date = Date.now();
-      this._comment.author = getRandomElement(AUTHORS);
-      this._callback.formSubmit(this._comment, UpdateType.MINOR);
+      this._blockElement();
+      this._callback.formSubmit(this._comment, UpdateType.MINOR, ActionType.ADD_COMMENT);
     }
+  }
+
+
+  unblockComment(comment) {
+    this._commentsViews[comment.id].unblockElement();
+  }
+
+  _blockElement() {
+    this.getElement().querySelector(`.film-details__comment-input`).disabled = true;
+  }
+
+  unblockElement() {
+    this.getElement().querySelector(`.film-details__comment-input`).disabled = false;
+  }
+
+  errorShake() {
+    this.getElement().querySelector(`.film-details__new-comment`).classList.add(`shake`);
+    setTimeout(() => {
+      this.getElement().querySelector(`.film-details__new-comment`).classList.remove(`shake`);
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
 

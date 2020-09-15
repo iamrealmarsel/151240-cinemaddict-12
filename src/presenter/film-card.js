@@ -1,6 +1,7 @@
 import FilmCardView from '../view/film-card.js';
 import FilmDetailsView from '../view/film-details.js';
 import {render} from '../utils/render.js';
+import {ActionType} from '../const.js';
 
 
 export default class FilmCardPresenter {
@@ -36,6 +37,19 @@ export default class FilmCardPresenter {
 
   }
 
+  abort(actionType, comment) {
+
+    switch (actionType) {
+      case ActionType.ADD_COMMENT:
+        this._filmDetailsView.unblockElement();
+        this._filmDetailsView.errorShake();
+        break;
+      case ActionType.DELETE_COMMENT:
+        this._filmDetailsView.unblockComment(comment);
+    }
+
+  }
+
 
   _createFilmCardInstance(film) {
 
@@ -61,15 +75,13 @@ export default class FilmCardPresenter {
     this._filmDetailsView.setCommentDeleteHandler(this._onCommentDeleteClick.bind(this));
   }
 
-  _onCommentDeleteClick(comment, updateType) {
-    const indexComment = this._film.comments.indexOf(comment);
-    this._film.comments.splice(indexComment, 1);
-    this._updateData(this._film, updateType);
+  _onCommentDeleteClick(comment, updateType, actionType) {
+    this._updateData(comment, updateType, actionType);
   }
 
-  _onFormSubmit(comment, updateType) {
+  _onFormSubmit(comment, updateType, actionType) {
     this._film.comments.push(comment);
-    this._updateData(this._film, updateType);
+    this._updateData(this._film, updateType, actionType);
   }
 
   _onEscapeDown(event) {
@@ -109,23 +121,23 @@ export default class FilmCardPresenter {
   }
 
 
-  _handleWatchlistClick(updateType) {
+  _handleWatchlistClick(updateType, actionType) {
     // console.log(updateType);
     const newFilm = Object.assign({}, this._film);
     newFilm.isWatchlist = !newFilm.isWatchlist;
-    this._updateData(newFilm, updateType);
+    this._updateData(newFilm, updateType, actionType);
   }
 
-  _handleHistoryClick(updateType) {
+  _handleHistoryClick(updateType, actionType) {
     const newFilm = Object.assign({}, this._film);
     newFilm.isWatched = !newFilm.isWatched;
-    this._updateData(newFilm, updateType);
+    this._updateData(newFilm, updateType, actionType);
   }
 
-  _handleFavoriteClick(updateType) {
+  _handleFavoriteClick(updateType, actionType) {
     const newFilm = Object.assign({}, this._film);
     newFilm.isFavorite = !newFilm.isFavorite;
-    this._updateData(newFilm, updateType);
+    this._updateData(newFilm, updateType, actionType);
   }
 
 

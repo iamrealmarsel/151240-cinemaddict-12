@@ -1,4 +1,4 @@
-import {FILM_COUNT, FILM_COUNT_PER_STEP, SortBy, UpdateType} from '../const.js';
+import {FILM_COUNT, FILM_COUNT_PER_STEP, SortBy, UpdateType, ActionType} from '../const.js';
 
 import {render} from '../utils/render.js';
 import {filter} from '../utils/filter.js';
@@ -124,11 +124,48 @@ export default class FilmBoardPresenter {
   }
 
 
-  _updateData(newFilm, updateType) {
-    // console.log(updateType);
-    this._api.updateFilms(newFilm).then((response) => {
-      this._filmsModel.updateFilms(response, updateType);
-    });
+  _updateData(newData, updateType, actionType) {
+
+    switch (actionType) {
+
+      case ActionType.ADD_COMMENT:
+        this._api.addComment(newData)
+          .then((response) => {
+            // console.log(`ошибка при добавлении 1`, response);
+            this._filmsModel.updateFilms(response, updateType);
+          })
+          .catch(() => {
+            // console.log(`ошибка при добавлении 2`, newData);
+            this._filmCardPresenters[newData.id].abort(actionType);
+          });
+        break;
+
+
+      case ActionType.DELETE_COMMENT:
+        this._api.deleteComment(newData)
+          .then((r) => {
+            console.log(`then`, r);
+            this._filmsModel.deleteComment(newData, updateType);
+          })
+          .catch(() => {
+            console.log(`catch`, newData);
+            this._films.forEach((film) => {
+              if (film.comments.includes(newData)) {
+                this._filmCardPresenters[film.id].abort(actionType, newData);
+                return;
+              }
+            });
+          });
+        break;
+
+
+      default:
+        this._api.updateFilms(newData).then((response) => {
+          this._filmsModel.updateFilms(response, updateType);
+        });
+
+    }
+
   }
 
 

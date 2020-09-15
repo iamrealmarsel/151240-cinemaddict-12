@@ -1,6 +1,6 @@
 import AbstractView from './abstract.js';
 import moment from "moment";
-import {UpdateType} from '../const.js';
+import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import he from "he";
 
 const createCommentsMarkup = (commentary) => {
@@ -41,7 +41,27 @@ export default class CommentsView extends AbstractView {
 
   _onDeleteCommentClick() {
     event.preventDefault();
-    this._callback(this._comment, UpdateType.MINOR);
+    this._blockElement();
+    this._callback(this._comment, UpdateType.MINOR, ActionType.DELETE_COMMENT);
+  }
+
+
+  _blockElement() {
+    this.getElement().querySelector(`.film-details__comment-delete`).disabled = true;
+    this.getElement().querySelector(`.film-details__comment-delete`).textContent = `Deleting...`;
+  }
+
+  unblockElement() {
+    this._errorShake();
+    this.getElement().querySelector(`.film-details__comment-delete`).disabled = false;
+    this.getElement().querySelector(`.film-details__comment-delete`).textContent = `Delete`;
+  }
+
+  _errorShake() {
+    this.getElement().classList.add(`shake`);
+    setTimeout(() => {
+      this.getElement().classList.remove(`shake`);
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
 
