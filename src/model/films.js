@@ -37,12 +37,9 @@ export default class FilmsModel extends Observer {
   deleteComment(comment, updateType) {
 
     this._films.forEach((film) => {
-      if (film.comments.includes(comment)) {
-        const index = film.comments.indexOf(comment);
-        film.comments.splice(index, 1);
-
+      if (film.comments.includes(comment.id)) {
+        // console.log(film);
         this._notify(film, updateType);
-        return;
       }
     });
 

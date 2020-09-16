@@ -6,9 +6,6 @@ const createFilmCardMarkup = (film) => {
 
   let {title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, releaseDate} = film;
   const controlActive = `film-card__controls-item--active`;
-  // console.log(film);
-  // console.log(film.comments);
-  // console.log(film.comments.length);
 
   const favorite = isFavorite ? controlActive : ``;
   const watched = isWatched ? controlActive : ``;

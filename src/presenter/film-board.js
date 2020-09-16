@@ -64,17 +64,6 @@ export default class FilmBoardPresenter {
       return;
     }
 
-    // this._filmsDefaultSort = this._films.slice();
-
-    // render(this._filmWrapView, this._filmContainerView, `beforeend`);
-    // render(this._filmListView, this._filmWrapView, `beforeend`);
-
-    // this._renderFilmList(0, Math.min(FILM_COUNT, FILM_COUNT_PER_STEP));
-
-    // if (FILM_COUNT > FILM_COUNT_PER_STEP) {
-    //   this._renderShowMoreButton();
-    // }
-
 
   }
 
@@ -131,11 +120,9 @@ export default class FilmBoardPresenter {
       case ActionType.ADD_COMMENT:
         this._api.addComment(newData)
           .then((response) => {
-            // console.log(`ошибка при добавлении 1`, response);
             this._filmsModel.updateFilms(response, updateType);
           })
           .catch(() => {
-            // console.log(`ошибка при добавлении 2`, newData);
             this._filmCardPresenters[newData.id].abort(actionType);
           });
         break;
@@ -143,19 +130,19 @@ export default class FilmBoardPresenter {
 
       case ActionType.DELETE_COMMENT:
         this._api.deleteComment(newData)
-          .then((r) => {
-            console.log(`then`, r);
+          .then((response) => {
+            // console.log(`then`, response);
             this._filmsModel.deleteComment(newData, updateType);
           })
-          .catch(() => {
-            console.log(`catch`, newData);
-            this._films.forEach((film) => {
-              if (film.comments.includes(newData)) {
-                this._filmCardPresenters[film.id].abort(actionType, newData);
-                return;
-              }
-            });
+        .catch(() => {
+          // console.log(`catch`, newData);
+          this._films.forEach((film) => {
+            if (film.comments.includes(newData.id)) {
+              this._filmCardPresenters[film.id].abort(actionType, newData);
+              return;
+            }
           });
+        });
         break;
 
 
@@ -239,7 +226,7 @@ export default class FilmBoardPresenter {
 
 
   _renderFilmCard(film) {
-    const filmCardPresenter = new FilmCardPresenter(this._mainElement, this._filmListView, this._updateData.bind(this));
+    const filmCardPresenter = new FilmCardPresenter(this._mainElement, this._filmListView, this._updateData.bind(this), this._api);
     filmCardPresenter.init(film);
     filmCardPresenter.setClosePopup(this._closePopup.bind(this));
     this._filmCardPresenters[film.id] = filmCardPresenter;

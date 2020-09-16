@@ -3,12 +3,13 @@ import CommentsView from './comments.js';
 import {render} from '../utils/render.js';
 import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
 import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
+import moment from "moment";
 
 
 const createFilmDetailsMarkup = (film) => {
 
   let {title, alternativeTitle, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, genres, releaseDate, director, writers, actors, country, age} = film;
-  const dateRelease = releaseDate.toLocaleString(`ru-RU`, {month: `long`, year: `numeric`, day: `numeric`});
+  const dateRelease = moment(releaseDate).format(`DD MMMM YYYY`);
   duration = convertTotalMinutesToHoursMinutes(duration);
 
 

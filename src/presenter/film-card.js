@@ -2,14 +2,16 @@ import FilmCardView from '../view/film-card.js';
 import FilmDetailsView from '../view/film-details.js';
 import {render} from '../utils/render.js';
 import {ActionType} from '../const.js';
+import api from '../api.js';
 
 
 export default class FilmCardPresenter {
-  constructor(mainElement, filmListView, updateData) {
+  constructor(mainElement, filmListView, updateData, api) {
     this._filmListView = filmListView;
     this._mainElement = mainElement;
     this._updateData = updateData;
     this._callback = {};
+    this._api = api;
   }
 
   init(film) {
@@ -30,7 +32,8 @@ export default class FilmCardPresenter {
 
     this._filmCardViewOld.getElement().replaceWith(this._filmCardView.getElement());
     this._filmDetailsViewOld.getElement().replaceWith(this._filmDetailsView.getElement());
-    this._filmDetailsView.renderComments(film.comments);
+    this._api.getComments(this._film.id).then((comments) => this._filmDetailsView.renderComments(comments));
+    // this._filmDetailsView.renderComments(film.comments);
 
     this._filmCardViewOld = this._filmCardView;
     this._filmDetailsViewOld = this._filmDetailsView;
@@ -104,7 +107,8 @@ export default class FilmCardPresenter {
     this._callback.closePopup();
 
     render(this._filmDetailsView, this._mainElement, `afterend`);
-    this._filmDetailsView.renderComments(this._film.comments);
+
+    this._api.getComments(this._film.id).then((comments) => this._filmDetailsView.renderComments(comments));
 
     document.addEventListener(`keydown`, this._onEscapeDown.bind(this));
   }
