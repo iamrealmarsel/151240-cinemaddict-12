@@ -1,5 +1,3 @@
-// import FilmsModel from './model/films.js';
-
 
 export default class Api {
   constructor(endPoint, authorization) {
@@ -50,23 +48,7 @@ export default class Api {
   }
 
 
-  _adaptCommentsToServer(comments) {
-    const comment = comments.pop();
-    const adaptedComment = Object.assign(
-        {},
-        comment,
-        {
-          "date": new Date(comment.date).toISOString()
-        }
-    );
-
-    return adaptedComment;
-  }
-
-  _adaptCommentsToClient(response) {
-
-    const film = response.movie;
-
+  _adaptFilmToClient(film) {
     const adaptedFilm = Object.assign(
         {},
         film.film_info,
@@ -98,43 +80,35 @@ export default class Api {
   }
 
 
-  _adaptToClient(films) {
+  _adaptCommentsToServer(comments) {
+    const comment = comments.pop();
+    const adaptedComment = Object.assign(
+        {},
+        comment,
+        {
+          "date": new Date(comment.date).toISOString()
+        }
+    );
 
-    // console.log(films);
+    return adaptedComment;
+  }
+
+  _adaptCommentsToClient(response) {
+
+    const film = response.movie;
+
+    return this._adaptFilmToClient(film);
+  }
+
+
+  _adaptToClient(films) {
 
     if (films instanceof Array) {
       let adaptedFilms = [];
 
       films.forEach((film) => {
 
-        const adaptedFilm = Object.assign(
-            {},
-            film.film_info,
-            {
-              id: film.id,
-              rate: film.film_info.total_rating,
-              duration: film.film_info.runtime,
-              releaseDate: new Date(film.film_info.release.date),
-              country: film.film_info.release.release_country,
-              genres: film.film_info.genre,
-              age: film.film_info.age_rating,
-              alternativeTitle: film.film_info.alternative_title,
-              isFavorite: film.user_details.favorite,
-              isWatched: film.user_details.already_watched,
-              isWatchlist: film.user_details.watchlist,
-              watchingDate: new Date(film.user_details.watching_date),
-              comments: film.comments
-            }
-        );
-
-        delete adaptedFilm.total_rating;
-        delete adaptedFilm.runtime;
-        delete adaptedFilm.genre;
-        delete adaptedFilm.age_rating;
-        delete adaptedFilm.release;
-        delete adaptedFilm.alternative_title;
-
-        adaptedFilms.push(adaptedFilm);
+        adaptedFilms.push(this._adaptFilmToClient(film));
 
       });
 
@@ -142,34 +116,7 @@ export default class Api {
 
     } else {
 
-      const adaptedFilm = Object.assign(
-          {},
-          films.film_info,
-          {
-            id: films.id,
-            rate: films.film_info.total_rating,
-            duration: films.film_info.runtime,
-            releaseDate: new Date(films.film_info.release.date),
-            country: films.film_info.release.release_country,
-            genres: films.film_info.genre,
-            age: films.film_info.age_rating,
-            alternativeTitle: films.film_info.alternative_title,
-            isFavorite: films.user_details.favorite,
-            isWatched: films.user_details.already_watched,
-            isWatchlist: films.user_details.watchlist,
-            watchingDate: new Date(films.user_details.watching_date),
-            comments: films.comments
-          }
-      );
-
-      delete adaptedFilm.total_rating;
-      delete adaptedFilm.runtime;
-      delete adaptedFilm.genre;
-      delete adaptedFilm.age_rating;
-      delete adaptedFilm.release;
-      delete adaptedFilm.alternative_title;
-
-      return adaptedFilm;
+      return this._adaptFilmToClient(films);
 
     }
 
@@ -178,7 +125,6 @@ export default class Api {
 
   _adaptToServer(film) {
 
-    // const commentIDs = film.comments.map((comment) => comment.id);
 
     const filmInfo = Object.assign(
         {},
@@ -225,14 +171,12 @@ export default class Api {
         }
     );
 
-    // console.log(adaptedFilm);
 
     return adaptedFilm;
   }
 
 
   getComments(id) {
-    // console.log(this);
     return this._load({url: `comments/${id}`, method: `GET`}).then(Api.toJSON);
   }
 
@@ -253,7 +197,6 @@ export default class Api {
   }
 
   static catchError(error) {
-    // console.log(`ошибка catchError`, error);
     throw error;
   }
 

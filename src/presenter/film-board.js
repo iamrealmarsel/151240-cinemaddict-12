@@ -130,12 +130,10 @@ export default class FilmBoardPresenter {
 
       case ActionType.DELETE_COMMENT:
         this._api.deleteComment(newData)
-          .then((response) => {
-            // console.log(`then`, response);
+          .then(() => {
             this._filmsModel.deleteComment(newData, updateType);
           })
         .catch(() => {
-          // console.log(`catch`, newData);
           this._films.forEach((film) => {
             if (film.comments.includes(newData.id)) {
               this._filmCardPresenters[film.id].abort(actionType, newData);
@@ -158,7 +156,6 @@ export default class FilmBoardPresenter {
 
   _updateFilmCard(newFilm, updateType) {
 
-    // console.log(updateType);
 
     switch (updateType) {
 
@@ -168,8 +165,6 @@ export default class FilmBoardPresenter {
         this._loadingView.getElement().remove();
 
         this._filmsDefaultSort = this._films.slice();
-
-        // console.log(this._films);
 
         render(this._filmWrapView, this._filmContainerView, `beforeend`);
         render(this._filmListView, this._filmWrapView, `beforeend`);
@@ -237,7 +232,6 @@ export default class FilmBoardPresenter {
     this._films
       .slice(from, to)
       .forEach((film) => this._renderFilmCard(film));
-    // console.log(this._filmCardPresenters);
   }
 
 

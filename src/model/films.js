@@ -38,7 +38,8 @@ export default class FilmsModel extends Observer {
 
     this._films.forEach((film) => {
       if (film.comments.includes(comment.id)) {
-        // console.log(film);
+        const index = film.comments.indexOf(comment.id);
+        film.comments.splice(index, 1);
         this._notify(film, updateType);
       }
     });

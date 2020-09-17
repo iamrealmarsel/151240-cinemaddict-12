@@ -18,11 +18,9 @@ const filmsModel = new FilmsModel();
 
 api.getFilms()
   .then((films) => {
-    // console.log(films);
     filmsModel.setFilms(films, UpdateType.INIT);
   })
-  .catch((error) => {
-    // console.log(`ошибка при получении`, error);
+  .catch(() => {
     filmsModel.setFilms([], UpdateType.INIT);
   });
 

@@ -2,7 +2,6 @@ import FilmCardView from '../view/film-card.js';
 import FilmDetailsView from '../view/film-details.js';
 import {render} from '../utils/render.js';
 import {ActionType} from '../const.js';
-import api from '../api.js';
 
 
 export default class FilmCardPresenter {
@@ -33,7 +32,6 @@ export default class FilmCardPresenter {
     this._filmCardViewOld.getElement().replaceWith(this._filmCardView.getElement());
     this._filmDetailsViewOld.getElement().replaceWith(this._filmDetailsView.getElement());
     this._api.getComments(this._film.id).then((comments) => this._filmDetailsView.renderComments(comments));
-    // this._filmDetailsView.renderComments(film.comments);
 
     this._filmCardViewOld = this._filmCardView;
     this._filmDetailsViewOld = this._filmDetailsView;
@@ -95,8 +93,7 @@ export default class FilmCardPresenter {
     }
   }
 
-  _onCloseClick(event) {
-    event.preventDefault();
+  _onCloseClick() {
     this._filmDetailsView.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscapeDown);
   }
@@ -120,13 +117,15 @@ export default class FilmCardPresenter {
 
 
   closePopup() {
+    this._filmDetailsView.getElement().querySelector(`.film-details__comment-input`).value = ``;
+    this._filmDetailsView.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    this._filmDetailsView.getElement().querySelectorAll(`.film-details__emoji-item`).forEach((input) => (input.checked = false));
     this._filmDetailsView.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscapeDown);
   }
 
 
   _handleWatchlistClick(updateType, actionType) {
-    // console.log(updateType);
     const newFilm = Object.assign({}, this._film);
     newFilm.isWatchlist = !newFilm.isWatchlist;
     this._updateData(newFilm, updateType, actionType);
