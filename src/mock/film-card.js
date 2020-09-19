@@ -7,8 +7,6 @@ const ACTORS = [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`];
 const COUNTRY = [`USA`, `Thailand`, `England`, `France`];
 const AGE = [`6+`, `12+`, `16+`, `18+`];
 
-// console.log(moment().format());
-// console.log(new Date());
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -87,7 +85,6 @@ const getRandomReleaseDate = () => {
   return randomReleaseDate;
 };
 
-// console.log(getRandomReleaseDate());
 
 let numberId = 0;
 const generateId = () => (numberId += 1);

@@ -31,6 +31,15 @@ export const FilterType = {
   All: `all`,
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
-  FAVORITES: `favorites`
+  FAVORITES: `favorites`,
+  STATISTIC: `statistic`
 };
 
+
+export const StatisticPeriod = {
+  ALLTIME: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`,
+};

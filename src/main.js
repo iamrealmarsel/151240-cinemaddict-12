@@ -34,3 +34,5 @@ const footerStatElement = document.querySelector(`.footer__statistics`);
 
 new FilterPresenter(mainElement, filterModel, filmsModel).init();
 new FilmBoardPresenter(headerElement, mainElement, footerStatElement, filmsModel, filterModel, api).init();
+
+

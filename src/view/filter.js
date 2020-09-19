@@ -23,7 +23,7 @@ const createFilterMarkup = (filmMocks, filterType) => {
         <a href="#history" class="main-navigation__item ${filterType === FilterType.HISTORY ? activeFilter : ``}" data-filter="${FilterType.HISTORY}">History <span class="main-navigation__item-count" >${watched}</span></a>
         <a href="#favorites" class="main-navigation__item ${filterType === FilterType.FAVORITES ? activeFilter : ``}" data-filter="${FilterType.FAVORITES}">Favorites <span class="main-navigation__item-count" >${favorite}</span></a>
       </div>
-      <a href="#stats" class="main-navigation__additional">Stats</a>
+      <a href="#stats" class="main-navigation__additional ${filterType === FilterType.STATISTIC ? activeFilter : ``}" data-filter="${FilterType.STATISTIC}">Stats</a>
     </nav>`;
 };
 
@@ -46,6 +46,16 @@ export default class FilterView extends AbstractView {
 
       callback(event.currentTarget.dataset.filter);
     }));
+
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, () => {
+      event.preventDefault();
+
+      if (this._filterType === event.currentTarget.dataset.filter) {
+        return;
+      }
+
+      callback(event.currentTarget.dataset.filter);
+    });
   }
 
   getMarkup() {
