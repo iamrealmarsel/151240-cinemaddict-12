@@ -1,14 +1,16 @@
 import FilmCardView from '../view/film-card.js';
 import FilmDetailsView from '../view/film-details.js';
 import {render} from '../utils/render.js';
+import {ActionType} from '../const.js';
 
 
 export default class FilmCardPresenter {
-  constructor(mainElement, filmListView, updateData) {
+  constructor(mainElement, filmListView, updateData, api) {
     this._filmListView = filmListView;
     this._mainElement = mainElement;
     this._updateData = updateData;
     this._callback = {};
+    this._api = api;
   }
 
   init(film) {
@@ -29,10 +31,23 @@ export default class FilmCardPresenter {
 
     this._filmCardViewOld.getElement().replaceWith(this._filmCardView.getElement());
     this._filmDetailsViewOld.getElement().replaceWith(this._filmDetailsView.getElement());
-    this._filmDetailsView.renderComments(film.comments);
+    this._api.getComments(this._film.id).then((comments) => this._filmDetailsView.renderComments(comments));
 
     this._filmCardViewOld = this._filmCardView;
     this._filmDetailsViewOld = this._filmDetailsView;
+
+  }
+
+  abort(actionType, comment) {
+
+    switch (actionType) {
+      case ActionType.ADD_COMMENT:
+        this._filmDetailsView.unblockElement();
+        this._filmDetailsView.errorShake();
+        break;
+      case ActionType.DELETE_COMMENT:
+        this._filmDetailsView.unblockComment(comment);
+    }
 
   }
 
@@ -61,15 +76,13 @@ export default class FilmCardPresenter {
     this._filmDetailsView.setCommentDeleteHandler(this._onCommentDeleteClick.bind(this));
   }
 
-  _onCommentDeleteClick(comment, updateType) {
-    const indexComment = this._film.comments.indexOf(comment);
-    this._film.comments.splice(indexComment, 1);
-    this._updateData(this._film, updateType);
+  _onCommentDeleteClick(comment, updateType, actionType) {
+    this._updateData(comment, updateType, actionType);
   }
 
-  _onFormSubmit(comment, updateType) {
+  _onFormSubmit(comment, updateType, actionType) {
     this._film.comments.push(comment);
-    this._updateData(this._film, updateType);
+    this._updateData(this._film, updateType, actionType);
   }
 
   _onEscapeDown(event) {
@@ -80,8 +93,7 @@ export default class FilmCardPresenter {
     }
   }
 
-  _onCloseClick(event) {
-    event.preventDefault();
+  _onCloseClick() {
     this._filmDetailsView.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscapeDown);
   }
@@ -92,7 +104,8 @@ export default class FilmCardPresenter {
     this._callback.closePopup();
 
     render(this._filmDetailsView, this._mainElement, `afterend`);
-    this._filmDetailsView.renderComments(this._film.comments);
+
+    this._api.getComments(this._film.id).then((comments) => this._filmDetailsView.renderComments(comments));
 
     document.addEventListener(`keydown`, this._onEscapeDown.bind(this));
   }
@@ -104,28 +117,30 @@ export default class FilmCardPresenter {
 
 
   closePopup() {
+    this._filmDetailsView.getElement().querySelector(`.film-details__comment-input`).value = ``;
+    this._filmDetailsView.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    this._filmDetailsView.getElement().querySelectorAll(`.film-details__emoji-item`).forEach((input) => (input.checked = false));
     this._filmDetailsView.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscapeDown);
   }
 
 
-  _handleWatchlistClick(updateType) {
-    // console.log(updateType);
+  _handleWatchlistClick(updateType, actionType) {
     const newFilm = Object.assign({}, this._film);
     newFilm.isWatchlist = !newFilm.isWatchlist;
-    this._updateData(newFilm, updateType);
+    this._updateData(newFilm, updateType, actionType);
   }
 
-  _handleHistoryClick(updateType) {
+  _handleHistoryClick(updateType, actionType) {
     const newFilm = Object.assign({}, this._film);
     newFilm.isWatched = !newFilm.isWatched;
-    this._updateData(newFilm, updateType);
+    this._updateData(newFilm, updateType, actionType);
   }
 
-  _handleFavoriteClick(updateType) {
+  _handleFavoriteClick(updateType, actionType) {
     const newFilm = Object.assign({}, this._film);
     newFilm.isFavorite = !newFilm.isFavorite;
-    this._updateData(newFilm, updateType);
+    this._updateData(newFilm, updateType, actionType);
   }
 
 

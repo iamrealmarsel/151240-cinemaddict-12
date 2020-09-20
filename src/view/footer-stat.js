@@ -1,19 +1,19 @@
 import AbstractView from './abstract.js';
 
 
-const createFooterStatsMarkup = (filmMocks) => {
-  return `<p>${filmMocks.length} movies inside</p>`;
+const createFooterStatsMarkup = (film) => {
+  return `<p>${film.length} movies inside</p>`;
 };
 
 
 export default class FooterStatsView extends AbstractView {
-  constructor(filmMocks) {
+  constructor(film) {
     super();
-    this._filmMocks = filmMocks;
+    this._film = film;
   }
 
   getMarkup() {
-    return createFooterStatsMarkup(this._filmMocks);
+    return createFooterStatsMarkup(this._film);
   }
 
 }

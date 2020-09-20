@@ -8,13 +8,18 @@ export default class FilmsModel extends Observer {
     this._films = [];
   }
 
+
   getFilms() {
     return this._films;
   }
 
-  setFilms(films) {
-    this._films = films;
+
+  setFilms(films, updateType) {
+    this._films = films.slice();
+
+    this._notify(null, updateType);
   }
+
 
   updateFilms(newFilm, updateType) {
     this._films.some((item, index) => {
@@ -25,9 +30,20 @@ export default class FilmsModel extends Observer {
       return false;
     });
 
-    // console.log(updateType);
-
     this._notify(newFilm, updateType);
+  }
+
+
+  deleteComment(comment, updateType) {
+
+    this._films.forEach((film) => {
+      if (film.comments.includes(comment.id)) {
+        const index = film.comments.indexOf(comment.id);
+        film.comments.splice(index, 1);
+        this._notify(film, updateType);
+      }
+    });
+
   }
 
 

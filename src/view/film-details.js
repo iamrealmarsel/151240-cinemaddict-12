@@ -1,15 +1,17 @@
 import AbstractView from './abstract.js';
 import CommentsView from './comments.js';
 import {render} from '../utils/render.js';
-import {getRandomElement} from '../mock/film-card.js';
-import {UpdateType} from '../const.js';
+import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
+import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
+import moment from "moment";
 
-const AUTHORS = [`Tim Macoveev`, `John Doe`, `Gudini`];
 
-const createFilmDetailsMarkup = (filmMocks) => {
+const createFilmDetailsMarkup = (film) => {
 
-  const {title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, genres, releaseDate, director, writers, actors, country, age} = filmMocks;
-  const dateRelease = releaseDate.toLocaleString(`ru-RU`, {month: `long`, year: `numeric`, day: `numeric`});
+  let {title, alternativeTitle, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, genres, releaseDate, director, writers, actors, country, age} = film;
+  const dateRelease = moment(releaseDate).format(`DD MMMM YYYY`);
+  duration = convertTotalMinutesToHoursMinutes(duration);
+
 
   const genresMarkUp =
      `<td class="film-details__term">Genre${genres.length > 1 ? `s` : ``}</td>
@@ -25,14 +27,14 @@ const createFilmDetailsMarkup = (filmMocks) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+              <img class="film-details__poster-img" src="./${poster}" alt="">
               <p class="film-details__age">${age}</p>
             </div>
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${title}</h3>
-                  <p class="film-details__title-original">${title}</p>
+                  <p class="film-details__title-original">Original: ${alternativeTitle}</p>
                 </div>
                 <div class="film-details__rating">
                   <p class="film-details__total-rating">${rate}</p>
@@ -57,7 +59,7 @@ const createFilmDetailsMarkup = (filmMocks) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${duration}</td>
+                  <td class="film-details__cell">${duration.hours}h ${duration.minutes}m</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
@@ -122,17 +124,23 @@ const createFilmDetailsMarkup = (filmMocks) => {
 
 export default class FilmDetailsView extends AbstractView {
 
-  constructor(filmMock) {
+  constructor(film) {
     super();
-    this._filmMock = filmMock;
+    this._film = film;
     this._callback = {};
     this._comment = {};
+    this._commentsViews = [];
   }
 
 
   setClickHandler(callback) {
     this._callback.click = callback;
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._callback.click);
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closePopup.bind(this));
+  }
+
+  _closePopup() {
+    event.preventDefault();
+    this._callback.click();
   }
 
 
@@ -177,8 +185,9 @@ export default class FilmDetailsView extends AbstractView {
 
   _onEmojiClick() {
     const partsOfImagePath = event.target.tagName === `LABEL` ? event.target.querySelector(`img`).src.split(`/`) : event.target.src.split(`/`);
-    this._comment.emoji = partsOfImagePath[partsOfImagePath.length - 1];
-    this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = `<img src="images/emoji/${this._comment.emoji}" width="55" height="55" alt="emoji">`;
+    const emotionFullName = partsOfImagePath[partsOfImagePath.length - 1];
+    this._comment.emotion = emotionFullName.slice(0, -4);
+    this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = `<img src="images/emoji/${this._comment.emotion}.png" width="55" height="55" alt="emoji">`;
   }
 
   setCommentDeleteHandler(callback) {
@@ -193,6 +202,7 @@ export default class FilmDetailsView extends AbstractView {
   _renderComment(comment) {
     const commentsView = new CommentsView(comment);
     commentsView.setCommentDeleteHandler(this._callback.deleteComment);
+    this._commentsViews[comment.id] = commentsView;
     render(commentsView, this.getElement().querySelector(`.film-details__comments-list`), `beforeend`);
   }
 
@@ -204,20 +214,41 @@ export default class FilmDetailsView extends AbstractView {
 
   _onFormSubmit() {
     if (event.keyCode === 13 && event.metaKey) {
-      this._comment.text = this.getElement().querySelector(`.film-details__comment-input`).value;
-      if (this._comment.text === `` || this._comment.emoji === undefined) {
+      this._comment.comment = this.getElement().querySelector(`.film-details__comment-input`).value;
+      if (this._comment.comment === `` || this._comment.emotion === undefined) {
+        this.errorShake();
         return;
       }
 
       this._comment.date = Date.now();
-      this._comment.author = getRandomElement(AUTHORS);
-      this._callback.formSubmit(this._comment, UpdateType.MINOR);
+      this._blockElement();
+      this._callback.formSubmit(this._comment, UpdateType.MINOR, ActionType.ADD_COMMENT);
     }
   }
 
 
+  unblockComment(comment) {
+    this._commentsViews[comment.id].unblockElement();
+  }
+
+  _blockElement() {
+    this.getElement().querySelector(`.film-details__comment-input`).disabled = true;
+  }
+
+  unblockElement() {
+    this.getElement().querySelector(`.film-details__comment-input`).disabled = false;
+  }
+
+  errorShake() {
+    this.getElement().querySelector(`.film-details__new-comment`).classList.add(`shake`);
+    setTimeout(() => {
+      this.getElement().querySelector(`.film-details__new-comment`).classList.remove(`shake`);
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+
   getMarkup() {
-    return createFilmDetailsMarkup(this._filmMock);
+    return createFilmDetailsMarkup(this._film);
   }
 
 }

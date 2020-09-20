@@ -7,8 +7,6 @@ const ACTORS = [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`];
 const COUNTRY = [`USA`, `Thailand`, `England`, `France`];
 const AGE = [`6+`, `12+`, `16+`, `18+`];
 
-// console.log(moment().format());
-// console.log(new Date());
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -38,31 +36,9 @@ const getRandomDescription = () => {
 
 const generateRandomDate = () => {
 
-  // const SEVEN_DAYS_IN_MS = 604800000;
   const DAYS_GAP = 365;
-  // const today = new Date();
   const randomDate = new Date();
   randomDate.setDate(randomDate.getDate() - getRandomInteger(0, DAYS_GAP));
-
-  // let stringDate;
-
-  // if ((today.getTime() - randomDate.getTime()) <= SEVEN_DAYS_IN_MS) {
-  //   const gapDaysOfMonth = today.getDate() - randomDate.getDate();
-
-  //   switch (gapDaysOfMonth) {
-  //     case 0:
-  //       stringDate = `Today`;
-  //       break;
-  //     case 1:
-  //       stringDate = `Yesterday`;
-  //       break;
-  //     default:
-  //       stringDate = `${gapDaysOfMonth} days ago`;
-  //   }
-
-  // } else {
-  //   stringDate = `${randomDate.getFullYear()}/${randomDate.getMonth() + 1}/${randomDate.getDate()} ${randomDate.getHours()}:${randomDate.getMinutes()}`;
-  // }
 
   return randomDate;
 };
