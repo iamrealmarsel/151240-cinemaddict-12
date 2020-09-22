@@ -1,11 +1,6 @@
 import AbstractView from '../view/abstract-view.js';
 
 
-export const renderDOM = (container, markup, place) => {
-  container.insertAdjacentHTML(place, markup);
-};
-
-
 export const render = (element, parentElement, place) => {
 
   if (element instanceof AbstractView) {
