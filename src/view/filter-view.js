@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-view.js';
 import {FilterType} from '../const.js';
 
 
@@ -37,7 +37,7 @@ export default class FilterView extends AbstractView {
 
 
   setFilterClick(callback) {
-    this.getElement().querySelectorAll(`.main-navigation__item`).forEach((element) => element.addEventListener(`click`, () => {
+    this.getElement().querySelectorAll(`.main-navigation__item`).forEach((element) => element.addEventListener(`click`, (event) => {
       event.preventDefault();
 
       if (this._filterType === event.currentTarget.dataset.filter) {
@@ -47,7 +47,7 @@ export default class FilterView extends AbstractView {
       callback(event.currentTarget.dataset.filter);
     }));
 
-    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, () => {
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, (event) => {
       event.preventDefault();
 
       if (this._filterType === event.currentTarget.dataset.filter) {

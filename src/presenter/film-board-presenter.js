@@ -1,22 +1,21 @@
 import moment from 'moment';
 
-import {FILM_COUNT, FILM_COUNT_PER_STEP, SortBy, UpdateType, ActionType, FilterType, StatisticPeriod} from '../const.js';
-
+import {FILM_COUNT_PER_STEP, SortBy, UpdateType, ActionType, FilterType, StatisticPeriod} from '../const.js';
 import {render} from '../utils/render.js';
 import {filter} from '../utils/filter.js';
 
-import FilmContainerView from '../view/film-container.js';
-import FilmWrapView from '../view/film-wrap.js';
-import NoFilmsView from '../view/no-films.js';
-import FilmListView from '../view/film-list.js';
-import ButtonMoreView from '../view/button-more.js';
-import SortView from '../view/sort.js';
+import FilmContainerView from '../view/film-container-view.js';
+import FilmWrapView from '../view/film-wrap-view.js';
+import NoFilmsView from '../view/no-films-view.js';
+import FilmListView from '../view/film-list-view.js';
+import ButtonMoreView from '../view/button-more-view.js';
+import SortView from '../view/sort-view.js';
 import LoadingView from '../view/loading-view.js';
-import FooterStatsView from '../view/footer-stat.js';
-import ProfileView from '../view/profile.js';
-import StatisticView from '../view/statistic.js';
+import FooterStatsView from '../view/footer-stat-view.js';
+import ProfileView from '../view/profile-view.js';
+import StatisticView from '../view/statistic-view.js';
 
-import FilmCardPresenter from './film-card.js';
+import FilmCardPresenter from './film-card-presenter.js';
 
 
 export default class FilmBoardPresenter {
@@ -93,9 +92,9 @@ export default class FilmBoardPresenter {
           break;
       }
 
-      this._renderFilmList(0, Math.min(FILM_COUNT, FILM_COUNT_PER_STEP));
+      this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
-      if (FILM_COUNT > FILM_COUNT_PER_STEP & !this._buttonMoreView.hasDomElemnt()) {
+      if (this._films.length > FILM_COUNT_PER_STEP & !this._buttonMoreView.hasDomElemnt()) {
         this._renderShowMoreButton();
       }
 
@@ -215,7 +214,6 @@ export default class FilmBoardPresenter {
 
   _updateFilmCard(newFilm, updateType) {
 
-
     switch (updateType) {
 
       case UpdateType.INIT:
@@ -228,9 +226,9 @@ export default class FilmBoardPresenter {
         render(this._filmWrapView, this._filmContainerView, `beforeend`);
         render(this._filmListView, this._filmWrapView, `beforeend`);
 
-        this._renderFilmList(0, Math.min(FILM_COUNT, FILM_COUNT_PER_STEP));
+        this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
-        if (FILM_COUNT > FILM_COUNT_PER_STEP) {
+        if (this._films.length > FILM_COUNT_PER_STEP) {
           this._renderShowMoreButton();
         }
 
@@ -245,6 +243,9 @@ export default class FilmBoardPresenter {
 
       case UpdateType.MINOR:
         this._filmCardPresenters[newFilm.id].updateFilmCard(newFilm);
+        this._profileView.getElement().remove();
+        this._profileView = new ProfileView(this._filmsModel.getFilms());
+        render(this._profileView, this._headerElement, `beforeend`);
         break;
 
 
@@ -315,9 +316,16 @@ export default class FilmBoardPresenter {
 
         this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
+        this._profileView.getElement().remove();
+        this._profileView = new ProfileView(this._filmsModel.getFilms());
+        render(this._profileView, this._headerElement, `beforeend`);
+
         if (this._films.length > FILM_COUNT_PER_STEP) {
           this._buttonMoreView.removeClickHandler();
           this._renderShowMoreButton();
+        } else {
+          this._buttonMoreView.removeClickHandler();
+          this._buttonMoreView.getElement().remove();
         }
 
     }

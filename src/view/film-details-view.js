@@ -1,5 +1,5 @@
-import AbstractView from './abstract.js';
-import CommentsView from './comments.js';
+import AbstractView from './abstract-view.js';
+import CommentsView from './comments-view.js';
 import {render} from '../utils/render.js';
 import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
 import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
@@ -138,7 +138,7 @@ export default class FilmDetailsView extends AbstractView {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closePopup.bind(this));
   }
 
-  _closePopup() {
+  _closePopup(event) {
     event.preventDefault();
     this._callback.click();
   }
@@ -149,7 +149,7 @@ export default class FilmDetailsView extends AbstractView {
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._onWatchlistClick.bind(this));
   }
 
-  _onWatchlistClick() {
+  _onWatchlistClick(event) {
     event.preventDefault();
     this._callback.clickWatchlist(UpdateType.MINOR);
   }
@@ -159,7 +159,7 @@ export default class FilmDetailsView extends AbstractView {
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._onHistoryClick.bind(this));
   }
 
-  _onHistoryClick() {
+  _onHistoryClick(event) {
     event.preventDefault();
     this._callback.clickHistory(UpdateType.MINOR);
   }
@@ -169,7 +169,7 @@ export default class FilmDetailsView extends AbstractView {
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._onFavoriteClick.bind(this));
   }
 
-  _onFavoriteClick() {
+  _onFavoriteClick(event) {
     event.preventDefault();
     this._callback.clickFavorite(UpdateType.MINOR);
   }
@@ -183,7 +183,7 @@ export default class FilmDetailsView extends AbstractView {
       });
   }
 
-  _onEmojiClick() {
+  _onEmojiClick(event) {
     const partsOfImagePath = event.target.tagName === `LABEL` ? event.target.querySelector(`img`).src.split(`/`) : event.target.src.split(`/`);
     const emotionFullName = partsOfImagePath[partsOfImagePath.length - 1];
     this._comment.emotion = emotionFullName.slice(0, -4);
@@ -212,7 +212,7 @@ export default class FilmDetailsView extends AbstractView {
     this.getElement().querySelector(`.film-details__new-comment`).addEventListener(`keydown`, this._onFormSubmit.bind(this));
   }
 
-  _onFormSubmit() {
+  _onFormSubmit(event) {
     if (event.keyCode === 13 && event.metaKey) {
       this._comment.comment = this.getElement().querySelector(`.film-details__comment-input`).value;
       if (this._comment.comment === `` || this._comment.emotion === undefined) {

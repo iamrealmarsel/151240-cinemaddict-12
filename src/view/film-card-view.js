@@ -1,10 +1,10 @@
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-view.js';
 import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
 
 
 const createFilmCardMarkup = (film) => {
 
-  let {title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, releaseDate} = film;
+  let {title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, releaseDate, genres} = film;
   const controlActive = `film-card__controls-item--active`;
 
   const favorite = isFavorite ? controlActive : ``;
@@ -12,14 +12,16 @@ const createFilmCardMarkup = (film) => {
   const watchlist = isWatchlist ? controlActive : ``;
   const releaseYear = releaseDate.getFullYear();
   duration = convertTotalMinutesToHoursMinutes(duration);
+  genres = genres.length === 0 ? `` : genres[0];
+  description = description.length <= 140 ? description : description.slice(0, 140) + `...`;
 
   return `<article class="film-card">
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${rate}</p>
       <p class="film-card__info">
         <span class="film-card__year">${releaseYear}</span>
-        <span class="film-card__duration">${duration}</span>
-        <span class="film-card__genre">Cartoon</span>
+        <span class="film-card__duration">${duration.hours}h ${duration.minutes}m</span>
+        <span class="film-card__genre">${genres}</span>
       </p>
       <img src="./${poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${description}</p>

@@ -1,9 +1,4 @@
-import AbstractView from '../view/abstract.js';
-
-
-export const renderDOM = (container, markup, place) => {
-  container.insertAdjacentHTML(place, markup);
-};
+import AbstractView from '../view/abstract-view.js';
 
 
 export const render = (element, parentElement, place) => {

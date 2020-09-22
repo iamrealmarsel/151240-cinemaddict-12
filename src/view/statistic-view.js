@@ -1,5 +1,5 @@
 import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-view.js';
 import {StatisticPeriod} from '../const.js';
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
@@ -75,8 +75,6 @@ const createStatisticMarkup = (period, watchedFilms, topGenre, profileRating) =>
 
   let totalDuration = watchedFilms.reduce((sum, film) => film.duration + sum, 0);
   totalDuration = convertTotalMinutesToHoursMinutes(totalDuration);
-
-  // if (topGenre === undefined)
   topGenre = topGenre === undefined ? `` : topGenre;
 
   return `
@@ -154,7 +152,7 @@ export default class StatisticView extends AbstractView {
     this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._onClickPeriod.bind(this));
   }
 
-  _onClickPeriod() {
+  _onClickPeriod(event) {
     this._callback(event.target.value);
   }
 

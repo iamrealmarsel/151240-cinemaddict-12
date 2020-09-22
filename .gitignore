@@ -12,6 +12,7 @@ Thumbs.db
 node_modules/
 src/test.js
 test.js
+checkpoint.md
 
 # Собранные JS-файлы (бандл)
 public/bundle.js

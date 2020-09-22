@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-view.js';
 import {SortBy} from '../const.js';
 
 const sortActive = `sort__button--active`;
