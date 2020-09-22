@@ -75,8 +75,6 @@ const createStatisticMarkup = (period, watchedFilms, topGenre, profileRating) =>
 
   let totalDuration = watchedFilms.reduce((sum, film) => film.duration + sum, 0);
   totalDuration = convertTotalMinutesToHoursMinutes(totalDuration);
-
-  // if (topGenre === undefined)
   topGenre = topGenre === undefined ? `` : topGenre;
 
   return `

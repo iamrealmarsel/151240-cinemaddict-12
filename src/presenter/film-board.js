@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import {FILM_COUNT, FILM_COUNT_PER_STEP, SortBy, UpdateType, ActionType, FilterType, StatisticPeriod} from '../const.js';
+import {FILM_COUNT_PER_STEP, SortBy, UpdateType, ActionType, FilterType, StatisticPeriod} from '../const.js';
 
 import {render} from '../utils/render.js';
 import {filter} from '../utils/filter.js';
@@ -93,9 +93,9 @@ export default class FilmBoardPresenter {
           break;
       }
 
-      this._renderFilmList(0, Math.min(FILM_COUNT, FILM_COUNT_PER_STEP));
+      this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
-      if (FILM_COUNT > FILM_COUNT_PER_STEP & !this._buttonMoreView.hasDomElemnt()) {
+      if (this._films.length > FILM_COUNT_PER_STEP & !this._buttonMoreView.hasDomElemnt()) {
         this._renderShowMoreButton();
       }
 
@@ -214,7 +214,7 @@ export default class FilmBoardPresenter {
 
 
   _updateFilmCard(newFilm, updateType) {
-
+    console.log(updateType);
 
     switch (updateType) {
 
@@ -228,9 +228,9 @@ export default class FilmBoardPresenter {
         render(this._filmWrapView, this._filmContainerView, `beforeend`);
         render(this._filmListView, this._filmWrapView, `beforeend`);
 
-        this._renderFilmList(0, Math.min(FILM_COUNT, FILM_COUNT_PER_STEP));
+        this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
-        if (FILM_COUNT > FILM_COUNT_PER_STEP) {
+        if (this._films.length > FILM_COUNT_PER_STEP) {
           this._renderShowMoreButton();
         }
 
@@ -245,6 +245,9 @@ export default class FilmBoardPresenter {
 
       case UpdateType.MINOR:
         this._filmCardPresenters[newFilm.id].updateFilmCard(newFilm);
+        this._profileView.getElement().remove();
+        this._profileView = new ProfileView(this._filmsModel.getFilms());
+        render(this._profileView, this._headerElement, `beforeend`);
         break;
 
 
@@ -315,9 +318,16 @@ export default class FilmBoardPresenter {
 
         this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
+        this._profileView.getElement().remove();
+        this._profileView = new ProfileView(this._filmsModel.getFilms());
+        render(this._profileView, this._headerElement, `beforeend`);
+
         if (this._films.length > FILM_COUNT_PER_STEP) {
           this._buttonMoreView.removeClickHandler();
           this._renderShowMoreButton();
+        } else {
+          this._buttonMoreView.removeClickHandler();
+          this._buttonMoreView.getElement().remove();
         }
 
     }
