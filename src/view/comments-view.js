@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import AbstractView from './abstract-view.js';
 import moment from "moment";
 import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import he from "he";
@@ -39,7 +39,7 @@ export default class CommentsView extends AbstractView {
     this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._onDeleteCommentClick.bind(this));
   }
 
-  _onDeleteCommentClick() {
+  _onDeleteCommentClick(event) {
     event.preventDefault();
     this._blockElement();
     this._callback(this._comment, UpdateType.MINOR, ActionType.DELETE_COMMENT);

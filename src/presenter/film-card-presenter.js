@@ -1,5 +1,6 @@
-import FilmCardView from '../view/film-card.js';
-import FilmDetailsView from '../view/film-details.js';
+import FilmCardView from '../view/film-card-view.js';
+import FilmDetailsView from '../view/film-details-view.js';
+
 import {render} from '../utils/render.js';
 import {ActionType} from '../const.js';
 

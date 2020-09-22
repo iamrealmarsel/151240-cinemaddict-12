@@ -1,22 +1,21 @@
 import moment from 'moment';
 
 import {FILM_COUNT_PER_STEP, SortBy, UpdateType, ActionType, FilterType, StatisticPeriod} from '../const.js';
-
 import {render} from '../utils/render.js';
 import {filter} from '../utils/filter.js';
 
-import FilmContainerView from '../view/film-container.js';
-import FilmWrapView from '../view/film-wrap.js';
-import NoFilmsView from '../view/no-films.js';
-import FilmListView from '../view/film-list.js';
-import ButtonMoreView from '../view/button-more.js';
-import SortView from '../view/sort.js';
+import FilmContainerView from '../view/film-container-view.js';
+import FilmWrapView from '../view/film-wrap-view.js';
+import NoFilmsView from '../view/no-films-view.js';
+import FilmListView from '../view/film-list-view.js';
+import ButtonMoreView from '../view/button-more-view.js';
+import SortView from '../view/sort-view.js';
 import LoadingView from '../view/loading-view.js';
-import FooterStatsView from '../view/footer-stat.js';
-import ProfileView from '../view/profile.js';
-import StatisticView from '../view/statistic.js';
+import FooterStatsView from '../view/footer-stat-view.js';
+import ProfileView from '../view/profile-view.js';
+import StatisticView from '../view/statistic-view.js';
 
-import FilmCardPresenter from './film-card.js';
+import FilmCardPresenter from './film-card-presenter.js';
 
 
 export default class FilmBoardPresenter {
@@ -214,7 +213,6 @@ export default class FilmBoardPresenter {
 
 
   _updateFilmCard(newFilm, updateType) {
-    console.log(updateType);
 
     switch (updateType) {
 

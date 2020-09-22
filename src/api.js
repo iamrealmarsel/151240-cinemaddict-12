@@ -189,7 +189,7 @@ export default class Api {
   }
 
   static checkStatus(response) {
-    if (response.status < 200 || response.status > 299) {
+    if (!response.ok) {
       throw new Error(`${response.status}: ${response.statusText}`);
     }
 
