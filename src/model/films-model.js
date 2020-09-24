@@ -29,7 +29,6 @@ export default class FilmsModel extends Observer {
     this._notify(newFilm, updateType);
   }
 
-
   deleteComment(comment, updateType) {
     this._films.forEach((film) => {
       if (film.comments.includes(comment.id)) {
