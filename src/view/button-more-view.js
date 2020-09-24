@@ -19,7 +19,7 @@ export default class ButtonMoreView extends AbstractView {
     this.getElement().removeEventListener(`click`, this._callback.click);
   }
 
-  hasDomElemnt() {
+  hasDomElement() {
     return Boolean(document.querySelector(`.films-list__show-more`));
   }
 

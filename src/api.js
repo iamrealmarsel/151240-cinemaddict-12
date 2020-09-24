@@ -1,3 +1,5 @@
+import {deleteProperties} from './utils/common.js';
+
 export default class Api {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
@@ -63,12 +65,7 @@ export default class Api {
         }
     );
 
-    delete adaptedFilm.total_rating;
-    delete adaptedFilm.runtime;
-    delete adaptedFilm.genre;
-    delete adaptedFilm.age_rating;
-    delete adaptedFilm.release;
-    delete adaptedFilm.alternative_title;
+    deleteProperties(adaptedFilm, `total_rating`, `runtime`, `genre`, `age_rating`, `release`, `alternative_title`);
 
     return adaptedFilm;
   }
@@ -124,19 +121,10 @@ export default class Api {
         }
     );
 
-    delete filmInfo.alternativeTitle;
-    delete filmInfo.rate;
-    delete filmInfo.duration;
-    delete filmInfo.genres;
-    delete filmInfo.age;
-    delete filmInfo.releaseDate;
-    delete filmInfo.country;
-    delete filmInfo.isFavorite;
-    delete filmInfo.isWatchlist;
-    delete filmInfo.isWatched;
-    delete filmInfo.watchingDate;
-    delete filmInfo.id;
-    delete filmInfo.comments;
+    deleteProperties(
+        filmInfo, `alternativeTitle`, `rate`, `duration`, `genres`, `age`, `releaseDate`,
+        `country`, `isFavorite`, `isWatchlist`, `isWatched`, `watchingDate`, `id`, `comments`
+    );
 
     const adaptedFilm = Object.assign(
         {},

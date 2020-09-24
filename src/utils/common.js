@@ -4,3 +4,9 @@ export const convertTotalMinutesToHoursMinutes = (totalMinutes) => {
 
   return {hours, minutes};
 };
+
+export const deleteProperties = (object, ...properties) => {
+  properties.forEach((prop) => {
+    delete object[prop];
+  });
+};

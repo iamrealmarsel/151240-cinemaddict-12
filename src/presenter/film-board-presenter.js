@@ -80,7 +80,7 @@ export default class FilmBoardPresenter {
 
       this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
-      if (this._films.length > FILM_COUNT_PER_STEP & !this._buttonMoreView.hasDomElemnt()) {
+      if (this._films.length > FILM_COUNT_PER_STEP & !this._buttonMoreView.hasDomElement()) {
         this._renderShowMoreButton();
       }
 
@@ -90,27 +90,31 @@ export default class FilmBoardPresenter {
 
   _replaceSort(sortType) {
     this._previousSortView = this._sortView;
-
     this._sortView = new SortView(sortType);
     this._sortView.setClickHandler(this._onSortClick.bind(this));
-
     this._previousSortView.getElement().replaceWith(this._sortView.getElement());
     this._currentSortType = sortType;
   }
 
-  _updateStatistic(period) {
-    let watchedFilms = this._filmsModel.getFilms().filter((film) => film.isWatched);
-    let profileRating = ``;
+  _getProfileRank(watchedFilms) {
+    let profileRank;
 
     if (watchedFilms.length === 0) {
-      profileRating = ``;
+      profileRank = ``;
     } else if (watchedFilms.length <= 10) {
-      profileRating = `novice`;
+      profileRank = `novice`;
     } else if (watchedFilms.length <= 20) {
-      profileRating = `fun`;
+      profileRank = `fun`;
     } else {
-      profileRating = `movie buff`;
+      profileRank = `movie buff`;
     }
+
+    return profileRank;
+  }
+
+  _updateStatistic(period) {
+    let watchedFilms = this._filmsModel.getFilms().filter((film) => film.isWatched);
+    const profileRank = this._getProfileRank(watchedFilms);
 
     switch (period) {
       case StatisticPeriod.TODAY:
@@ -135,6 +139,18 @@ export default class FilmBoardPresenter {
         break;
     }
 
+    const {uniqGenres, topGenre, filmsByGenresCounts} = this._getStatisticByGenres(watchedFilms);
+
+    this._statisticView.getElement().remove();
+    this._statisticView = new StatisticView(
+        period, uniqGenres, filmsByGenresCounts, watchedFilms, topGenre, profileRank
+    );
+    render(this._statisticView, this._mainElement, `beforeend`);
+    this._statisticView.renderChart();
+    this._statisticView.setClickPeriodHandler(this._updateStatistic.bind(this));
+  }
+
+  _getStatisticByGenres(watchedFilms) {
     const countFilmsGenres = new Map();
     let uniqGenres = new Set();
 
@@ -154,13 +170,7 @@ export default class FilmBoardPresenter {
     const maxCountGenre = Math.max(...filmsByGenresCounts);
     const topGenre = countFilmsGenres.get(maxCountGenre);
 
-    this._statisticView.getElement().remove();
-    this._statisticView = new StatisticView(
-        period, uniqGenres, filmsByGenresCounts, watchedFilms, topGenre, profileRating
-    );
-    render(this._statisticView, this._mainElement, `beforeend`);
-    this._statisticView.renderChart();
-    this._statisticView.setClickPeriodHandler(this._updateStatistic.bind(this));
+    return {uniqGenres, topGenre, filmsByGenresCounts};
   }
 
   _updateData(newData, updateType, actionType) {
@@ -181,7 +191,6 @@ export default class FilmBoardPresenter {
           })
         .catch(() => {
           this._films.forEach((film) => {
-
             if (film.comments.includes(newData.id)) {
               this._filmCardPresenters[film.id].abort(actionType, newData);
 
@@ -217,12 +226,14 @@ export default class FilmBoardPresenter {
         this._profileView = new ProfileView(this._films);
         render(this._profileView, this._headerElement, `beforeend`);
         break;
+
       case UpdateType.MINOR:
         this._filmCardPresenters[newFilm.id].updateFilmCard(newFilm);
         this._profileView.getElement().remove();
         this._profileView = new ProfileView(this._filmsModel.getFilms());
         render(this._profileView, this._headerElement, `beforeend`);
         break;
+
       default:
         const filterType = this._filterModel.getFilter();
 
@@ -230,42 +241,15 @@ export default class FilmBoardPresenter {
           this._filmContainerView.getElement().remove();
           this._sortView.getElement().remove();
           const watchedFilms = this._filmsModel.getFilms().filter((film) => film.isWatched);
-          let profileRating = ``;
-
-          if (watchedFilms.length === 0) {
-            profileRating = ``;
-          } else if (watchedFilms.length <= 10) {
-            profileRating = `novice`;
-          } else if (watchedFilms.length <= 20) {
-            profileRating = `fun`;
-          } else {
-            profileRating = `movie buff`;
-          }
-
-          const countFilmsGenres = new Map();
-          let uniqGenres = new Set();
-
-          watchedFilms.forEach((film) => {
-            uniqGenres.add(...film.genres);
-          });
-          uniqGenres.delete(undefined);
-          uniqGenres = [...uniqGenres];
-
-          const filmsByGenresCounts = uniqGenres.map((genre) => {
-            const count = watchedFilms.filter((film) => film.genres.includes(genre)).length;
-            countFilmsGenres.set(count, genre);
-            return count;
-          });
-
-          const maxCountGenre = Math.max(...filmsByGenresCounts);
-          const topGenre = countFilmsGenres.get(maxCountGenre);
+          const profileRank = this._getProfileRank(watchedFilms);
+          const {uniqGenres, topGenre, filmsByGenresCounts} = this._getStatisticByGenres(watchedFilms);
 
           if (this._statisticView) {
             this._statisticView.getElement().remove();
           }
 
           this._statisticView = new StatisticView(
-              StatisticPeriod.ALLTIME, uniqGenres, filmsByGenresCounts, watchedFilms, topGenre, profileRating
+              StatisticPeriod.ALLTIME, uniqGenres, filmsByGenresCounts, watchedFilms, topGenre, profileRank
           );
           render(this._statisticView, this._mainElement, `beforeend`);
           this._statisticView.renderChart();

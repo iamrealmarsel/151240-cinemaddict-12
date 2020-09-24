@@ -101,20 +101,20 @@ export default class FilmCardPresenter {
   }
 
   _handleWatchlistClick(updateType, actionType) {
-    const newFilm = Object.assign({}, this._film);
-    newFilm.isWatchlist = !newFilm.isWatchlist;
-    this._updateData(newFilm, updateType, actionType);
+    this._handleClick(updateType, actionType, `isWatchlist`);
   }
 
   _handleHistoryClick(updateType, actionType) {
-    const newFilm = Object.assign({}, this._film);
-    newFilm.isWatched = !newFilm.isWatched;
-    this._updateData(newFilm, updateType, actionType);
+    this._handleClick(updateType, actionType, `isWatched`);
   }
 
   _handleFavoriteClick(updateType, actionType) {
+    this._handleClick(updateType, actionType, `isFavorite`);
+  }
+
+  _handleClick(updateType, actionType, field) {
     const newFilm = Object.assign({}, this._film);
-    newFilm.isFavorite = !newFilm.isFavorite;
+    newFilm[field] = !newFilm[field];
     this._updateData(newFilm, updateType, actionType);
   }
 }
