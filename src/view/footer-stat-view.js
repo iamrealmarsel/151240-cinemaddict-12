@@ -1,10 +1,8 @@
 import AbstractView from './abstract-view.js';
 
-
 const createFooterStatsMarkup = (film) => {
   return `<p>${film.length} movies inside</p>`;
 };
-
 
 export default class FooterStatsView extends AbstractView {
   constructor(film) {
@@ -15,7 +13,4 @@ export default class FooterStatsView extends AbstractView {
   getMarkup() {
     return createFooterStatsMarkup(this._film);
   }
-
 }
-
-

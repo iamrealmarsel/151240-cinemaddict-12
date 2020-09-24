@@ -1,8 +1,6 @@
 import AbstractView from '../view/abstract-view.js';
 
-
 export const render = (element, parentElement, place) => {
-
   if (element instanceof AbstractView) {
     element = element.getElement();
   }
@@ -26,7 +24,6 @@ export const render = (element, parentElement, place) => {
       break;
   }
 };
-
 
 export const createElement = (markup) => {
   const parentElement = document.createElement(`div`);
