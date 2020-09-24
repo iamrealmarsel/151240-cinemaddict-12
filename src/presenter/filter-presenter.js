@@ -1,18 +1,14 @@
 import {render} from '../utils/render.js';
 import FilterView from '../view/filter-view.js';
 
-
 export default class FilterPresenter {
   constructor(mainElement, filterModel, filmsModel) {
     this._mainElement = mainElement;
-
     this._filterModel = filterModel;
     this._filterModel.addObserver(this._updateFilter.bind(this));
-
     this._filmsModel = filmsModel;
     this._filmsModel.addObserver(this._updateFilter.bind(this));
   }
-
 
   init() {
     this._filterType = this._filterModel.getFilter();
@@ -28,16 +24,11 @@ export default class FilterPresenter {
     this._previousFilterView = this._filterView;
   }
 
-
   _onFilterClick(filterType) {
     this._filterModel.setFilter(filterType);
   }
 
-
   _updateFilter() {
     this.init();
   }
-
-
 }
-

@@ -5,13 +5,13 @@ import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
 import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import moment from "moment";
 
-
 const createFilmDetailsMarkup = (film) => {
-
-  let {title, alternativeTitle, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, genres, releaseDate, director, writers, actors, country, age} = film;
+  let {
+    title, alternativeTitle, poster, description, comments, isFavorite,
+    isWatched, isWatchlist, rate, duration, genres, releaseDate, director,
+    writers, actors, country, age} = film;
   const dateRelease = moment(releaseDate).format(`DD MMMM YYYY`);
   duration = convertTotalMinutesToHoursMinutes(duration);
-
 
   const genresMarkUp =
      `<td class="film-details__term">Genre${genres.length > 1 ? `s` : ``}</td>
@@ -75,41 +75,50 @@ const createFilmDetailsMarkup = (film) => {
             </div>
           </div>
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWatchlist ? `checked` : ``}>
-            <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatched ? `checked` : ``}>
-            <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorite ? `checked` : ``}>
-            <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist"
+              ${isWatchlist ? `checked` : ``}>
+            <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">
+              Add to watchlist</label>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched"
+              ${isWatched ? `checked` : ``}>
+            <label for="watched" class="film-details__control-label film-details__control-label--watched">
+              Already watched</label>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite"
+              ${isFavorite ? `checked` : ``}>
+            <label for="favorite" class="film-details__control-label film-details__control-label--favorite">
+              Add to favorites</label>
           </section>
         </div>
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">
+              ${comments.length}</span></h3>
             <ul class="film-details__comments-list">
-
             </ul>
-
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label"></div>
               <label class="film-details__comment-label">
-                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here"
+                name="comment"></textarea>
               </label>
               <div class="film-details__emoji-list">
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio"
+                id="emoji-smile" value="smile">
                 <label class="film-details__emoji-label" for="emoji-smile">
                   <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
                 </label>
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio"
+                id="emoji-sleeping" value="sleeping">
                 <label class="film-details__emoji-label" for="emoji-sleeping">
                   <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                 </label>
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio"
+                id="emoji-puke" value="puke">
                 <label class="film-details__emoji-label" for="emoji-puke">
                   <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                 </label>
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio"
+                id="emoji-angry" value="angry">
                 <label class="film-details__emoji-label" for="emoji-angry">
                   <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
                 </label>
@@ -123,7 +132,6 @@ const createFilmDetailsMarkup = (film) => {
 
 
 export default class FilmDetailsView extends AbstractView {
-
   constructor(film) {
     super();
     this._film = film;
@@ -131,7 +139,6 @@ export default class FilmDetailsView extends AbstractView {
     this._comment = {};
     this._commentsViews = [];
   }
-
 
   setClickHandler(callback) {
     this._callback.click = callback;
@@ -143,10 +150,10 @@ export default class FilmDetailsView extends AbstractView {
     this._callback.click();
   }
 
-
   setClickWatchlistHandler(callback) {
     this._callback.clickWatchlist = callback;
-    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._onWatchlistClick.bind(this));
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, this._onWatchlistClick.bind(this));
   }
 
   _onWatchlistClick(event) {
@@ -156,7 +163,8 @@ export default class FilmDetailsView extends AbstractView {
 
   setClickHistoryHandler(callback) {
     this._callback.clickHistory = callback;
-    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._onHistoryClick.bind(this));
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, this._onHistoryClick.bind(this));
   }
 
   _onHistoryClick(event) {
@@ -166,14 +174,14 @@ export default class FilmDetailsView extends AbstractView {
 
   setClickFavoriteHandler(callback) {
     this._callback.clickFavorite = callback;
-    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._onFavoriteClick.bind(this));
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, this._onFavoriteClick.bind(this));
   }
 
   _onFavoriteClick(event) {
     event.preventDefault();
     this._callback.clickFavorite(UpdateType.MINOR);
   }
-
 
   setClickEmojiHandler() {
     this.getElement()
@@ -184,10 +192,14 @@ export default class FilmDetailsView extends AbstractView {
   }
 
   _onEmojiClick(event) {
-    const partsOfImagePath = event.target.tagName === `LABEL` ? event.target.querySelector(`img`).src.split(`/`) : event.target.src.split(`/`);
+    const partsOfImagePath = event.target.tagName === `LABEL`
+      ? event.target.querySelector(`img`).src.split(`/`)
+      : event.target.src.split(`/`);
     const emotionFullName = partsOfImagePath[partsOfImagePath.length - 1];
     this._comment.emotion = emotionFullName.slice(0, -4);
-    this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = `<img src="images/emoji/${this._comment.emotion}.png" width="55" height="55" alt="emoji">`;
+    this.getElement()
+      .querySelector(`.film-details__add-emoji-label`)
+      .innerHTML = `<img src="images/emoji/${this._comment.emotion}.png" width="55" height="55" alt="emoji">`;
   }
 
   setCommentDeleteHandler(callback) {
@@ -206,17 +218,19 @@ export default class FilmDetailsView extends AbstractView {
     render(commentsView, this.getElement().querySelector(`.film-details__comments-list`), `beforeend`);
   }
 
-
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
-    this.getElement().querySelector(`.film-details__new-comment`).addEventListener(`keydown`, this._onFormSubmit.bind(this));
+    this.getElement().querySelector(`.film-details__new-comment`)
+      .addEventListener(`keydown`, this._onFormSubmit.bind(this));
   }
 
   _onFormSubmit(event) {
     if (event.keyCode === 13 && event.metaKey) {
       this._comment.comment = this.getElement().querySelector(`.film-details__comment-input`).value;
+
       if (this._comment.comment === `` || this._comment.emotion === undefined) {
         this.errorShake();
+
         return;
       }
 
@@ -225,7 +239,6 @@ export default class FilmDetailsView extends AbstractView {
       this._callback.formSubmit(this._comment, UpdateType.MINOR, ActionType.ADD_COMMENT);
     }
   }
-
 
   unblockComment(comment) {
     this._commentsViews[comment.id].unblockElement();
@@ -246,11 +259,7 @@ export default class FilmDetailsView extends AbstractView {
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
-
   getMarkup() {
     return createFilmDetailsMarkup(this._film);
   }
-
 }
-
-

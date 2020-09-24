@@ -4,7 +4,6 @@ import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import he from "he";
 
 const createCommentsMarkup = (commentary) => {
-
   let {emotion, comment, author, date} = commentary;
   date = moment(date).fromNow();
   comment = he.encode(comment);
@@ -23,9 +22,7 @@ const createCommentsMarkup = (commentary) => {
         </p>
       </div>
     </li>`;
-
 };
-
 
 export default class CommentsView extends AbstractView {
   constructor(comment) {
@@ -33,10 +30,10 @@ export default class CommentsView extends AbstractView {
     this._comment = comment;
   }
 
-
   setCommentDeleteHandler(callback) {
     this._callback = callback;
-    this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._onDeleteCommentClick.bind(this));
+    this.getElement().querySelector(`.film-details__comment-delete`)
+      .addEventListener(`click`, this._onDeleteCommentClick.bind(this));
   }
 
   _onDeleteCommentClick(event) {
@@ -44,7 +41,6 @@ export default class CommentsView extends AbstractView {
     this._blockElement();
     this._callback(this._comment, UpdateType.MINOR, ActionType.DELETE_COMMENT);
   }
-
 
   _blockElement() {
     this.getElement().querySelector(`.film-details__comment-delete`).disabled = true;
@@ -59,14 +55,13 @@ export default class CommentsView extends AbstractView {
 
   _errorShake() {
     this.getElement().classList.add(`shake`);
+
     setTimeout(() => {
       this.getElement().classList.remove(`shake`);
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
-
   getMarkup() {
     return createCommentsMarkup(this._comment);
   }
 }
-

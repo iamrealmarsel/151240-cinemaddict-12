@@ -1,10 +1,8 @@
 import AbstractView from './abstract-view.js';
 
-
 const createButtonMoreMarkup = () => {
   return `<button class="films-list__show-more">Show more</button>`;
 };
-
 
 export default class ButtonMoreView extends AbstractView {
   constructor() {
@@ -21,7 +19,7 @@ export default class ButtonMoreView extends AbstractView {
     this.getElement().removeEventListener(`click`, this._callback.click);
   }
 
-  hasDomElemnt() {
+  hasDomElement() {
     return Boolean(document.querySelector(`.films-list__show-more`));
   }
 

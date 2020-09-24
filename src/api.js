@@ -1,10 +1,10 @@
+import {deleteProperties} from './utils/common.js';
 
 export default class Api {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
   }
-
 
   getFilms() {
     return this._load({
@@ -14,7 +14,6 @@ export default class Api {
     .then(Api.toJSON)
     .then(this._adaptToClient.bind(this));
   }
-
 
   updateFilms(film) {
     return this._load({
@@ -27,7 +26,6 @@ export default class Api {
       .then(this._adaptToClient.bind(this));
   }
 
-
   addComment(film) {
     return this._load({
       url: `comments/${film.id}`,
@@ -39,14 +37,12 @@ export default class Api {
       .then(this._adaptCommentsToClient.bind(this));
   }
 
-
   deleteComment(comment) {
     return this._load({
       url: `comments/${comment.id}`,
       method: `DELETE`
     });
   }
-
 
   _adaptFilmToClient(film) {
     const adaptedFilm = Object.assign(
@@ -69,16 +65,10 @@ export default class Api {
         }
     );
 
-    delete adaptedFilm.total_rating;
-    delete adaptedFilm.runtime;
-    delete adaptedFilm.genre;
-    delete adaptedFilm.age_rating;
-    delete adaptedFilm.release;
-    delete adaptedFilm.alternative_title;
+    deleteProperties(adaptedFilm, `total_rating`, `runtime`, `genre`, `age_rating`, `release`, `alternative_title`);
 
     return adaptedFilm;
   }
-
 
   _adaptCommentsToServer(comments) {
     const comment = comments.pop();
@@ -94,7 +84,6 @@ export default class Api {
   }
 
   _adaptCommentsToClient(response) {
-
     const film = response.movie;
 
     return this._adaptFilmToClient(film);
@@ -102,30 +91,20 @@ export default class Api {
 
 
   _adaptToClient(films) {
-
     if (films instanceof Array) {
       let adaptedFilms = [];
 
       films.forEach((film) => {
-
         adaptedFilms.push(this._adaptFilmToClient(film));
-
       });
 
       return adaptedFilms;
-
     } else {
-
       return this._adaptFilmToClient(films);
-
     }
-
   }
 
-
   _adaptToServer(film) {
-
-
     const filmInfo = Object.assign(
         {},
         film,
@@ -142,19 +121,10 @@ export default class Api {
         }
     );
 
-    delete filmInfo.alternativeTitle;
-    delete filmInfo.rate;
-    delete filmInfo.duration;
-    delete filmInfo.genres;
-    delete filmInfo.age;
-    delete filmInfo.releaseDate;
-    delete filmInfo.country;
-    delete filmInfo.isFavorite;
-    delete filmInfo.isWatchlist;
-    delete filmInfo.isWatched;
-    delete filmInfo.watchingDate;
-    delete filmInfo.id;
-    delete filmInfo.comments;
+    deleteProperties(
+        filmInfo, `alternativeTitle`, `rate`, `duration`, `genres`, `age`, `releaseDate`,
+        `country`, `isFavorite`, `isWatchlist`, `isWatched`, `watchingDate`, `id`, `comments`
+    );
 
     const adaptedFilm = Object.assign(
         {},
@@ -171,15 +141,12 @@ export default class Api {
         }
     );
 
-
     return adaptedFilm;
   }
-
 
   getComments(id) {
     return this._load({url: `comments/${id}`, method: `GET`}).then(Api.toJSON);
   }
-
 
   _load({url, method, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
@@ -203,6 +170,4 @@ export default class Api {
   static toJSON(response) {
     return response.json();
   }
-
-
 }

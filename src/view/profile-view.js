@@ -1,9 +1,8 @@
 import AbstractView from './abstract-view.js';
 
-
 const createProfileMarkup = (film) => {
-
   let watched = 0;
+
   for (const value of film) {
     watched = value.isWatched ? watched + 1 : watched + 0;
   }
@@ -26,7 +25,6 @@ const createProfileMarkup = (film) => {
     </section>`;
 };
 
-
 export default class ProfileView extends AbstractView {
   constructor(film) {
     super();
@@ -37,5 +35,3 @@ export default class ProfileView extends AbstractView {
     return createProfileMarkup(this._film);
   }
 }
-
-

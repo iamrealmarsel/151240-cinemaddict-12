@@ -1,6 +1,4 @@
-
 export default class Observer {
-
   constructor() {
     this._observers = [];
   }
@@ -16,5 +14,4 @@ export default class Observer {
   _notify(newData, type) {
     this._observers.forEach((observer) => observer(newData, type));
   }
-
 }
