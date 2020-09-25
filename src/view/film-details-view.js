@@ -6,12 +6,12 @@ import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import moment from "moment";
 
 const createFilmDetailsMarkup = (film) => {
-  let {
+  const {
     title, alternativeTitle, poster, description, comments, isFavorite,
     isWatched, isWatchlist, rate, duration, genres, releaseDate, director,
     writers, actors, country, age} = film;
   const dateRelease = moment(releaseDate).format(`DD MMMM YYYY`);
-  duration = convertTotalMinutesToHoursMinutes(duration);
+  const filmDuration = convertTotalMinutesToHoursMinutes(duration);
 
   const genresMarkUp =
      `<td class="film-details__term">Genre${genres.length > 1 ? `s` : ``}</td>
@@ -59,7 +59,7 @@ const createFilmDetailsMarkup = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${duration.hours}h ${duration.minutes}m</td>
+                  <td class="film-details__cell">${filmDuration.hours}h ${filmDuration.minutes}m</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

@@ -4,9 +4,9 @@ import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import he from "he";
 
 const createCommentsMarkup = (commentary) => {
-  let {emotion, comment, author, date} = commentary;
-  date = moment(date).fromNow();
-  comment = he.encode(comment);
+  const {emotion, comment, author, date} = commentary;
+  const commentDate = moment(date).fromNow();
+  const commentText = he.encode(comment);
 
   return `
     <li class="film-details__comment">
@@ -14,10 +14,10 @@ const createCommentsMarkup = (commentary) => {
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-smile">
       </span>
       <div>
-        <p class="film-details__comment-text">${comment}</p>
+        <p class="film-details__comment-text">${commentText}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${date}</span>
+          <span class="film-details__comment-day">${commentDate}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>

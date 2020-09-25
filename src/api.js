@@ -92,7 +92,7 @@ export default class Api {
 
   _adaptToClient(films) {
     if (films instanceof Array) {
-      let adaptedFilms = [];
+      const adaptedFilms = [];
 
       films.forEach((film) => {
         adaptedFilms.push(this._adaptFilmToClient(film));
