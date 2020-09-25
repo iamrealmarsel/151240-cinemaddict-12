@@ -118,24 +118,16 @@ export default class FilmBoardPresenter {
 
     switch (period) {
       case StatisticPeriod.TODAY:
-        watchedFilms = watchedFilms
-          .filter((film) => moment(film.watchingDate)
-          .isSame(moment(), `day`));
+        watchedFilms = this._filterPeriod(watchedFilms, `today`);
         break;
       case StatisticPeriod.WEEK:
-        watchedFilms = watchedFilms
-          .filter((film) => moment(film.watchingDate)
-          .isBetween(moment().subtract(1, `weeks`), moment(), `day`, `[]`));
+        watchedFilms = this._filterPeriod(watchedFilms, `weeks`);
         break;
       case StatisticPeriod.MONTH:
-        watchedFilms = watchedFilms
-          .filter((film) => moment(film.watchingDate)
-          .isBetween(moment().subtract(1, `months`), moment(), `day`, `[]`));
+        watchedFilms = this._filterPeriod(watchedFilms, `months`);
         break;
       case StatisticPeriod.YEAR:
-        watchedFilms = watchedFilms
-          .filter((film) => moment(film.watchingDate)
-          .isBetween(moment().subtract(1, `years`), moment(), `day`, `[]`));
+        watchedFilms = this._filterPeriod(watchedFilms, `years`);
         break;
     }
 
@@ -148,6 +140,20 @@ export default class FilmBoardPresenter {
     render(this._statisticView, this._mainElement, `beforeend`);
     this._statisticView.renderChart();
     this._statisticView.setClickPeriodHandler(this._updateStatistic.bind(this));
+  }
+
+  _filterPeriod(watchedFilms, period) {
+    if (period === `today`) {
+      watchedFilms = watchedFilms
+        .filter((film) => moment(film.watchingDate)
+        .isSame(moment(), `day`));
+    } else {
+      watchedFilms = watchedFilms
+        .filter((film) => moment(film.watchingDate)
+        .isBetween(moment().subtract(1, period), moment(), `day`, `[]`));
+    }
+
+    return watchedFilms;
   }
 
   _getStatisticByGenres(watchedFilms) {
@@ -209,78 +215,88 @@ export default class FilmBoardPresenter {
   _updateFilmCard(newFilm, updateType) {
     switch (updateType) {
       case UpdateType.INIT:
-        this._films = this._filmsModel.getFilms();
-        this._isLoading = false;
-        this._loadingView.getElement().remove();
-        this._filmsDefaultSort = this._films.slice();
-        render(this._filmWrapView, this._filmContainerView, `beforeend`);
-        render(this._filmListView, this._filmWrapView, `beforeend`);
-        this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
-
-        if (this._films.length > FILM_COUNT_PER_STEP) {
-          this._renderShowMoreButton();
-        }
-
-        this._footerStatsView = new FooterStatsView(this._films);
-        render(this._footerStatsView, this._footerStatElement, `beforeend`);
-        this._profileView = new ProfileView(this._films);
-        render(this._profileView, this._headerElement, `beforeend`);
+        this._updateInitFilmCard();
         break;
-
       case UpdateType.MINOR:
-        this._filmCardPresenters[newFilm.id].updateFilmCard(newFilm);
-        this._profileView.getElement().remove();
-        this._profileView = new ProfileView(this._filmsModel.getFilms());
-        render(this._profileView, this._headerElement, `beforeend`);
+        this._updateMinorFilmCard(newFilm);
         break;
-
       default:
-        const filterType = this._filterModel.getFilter();
+        this._updateMajorFilmCard();
+    }
+  }
 
-        if (filterType === FilterType.STATISTIC) {
-          this._filmContainerView.getElement().remove();
-          this._sortView.getElement().remove();
-          const watchedFilms = this._filmsModel.getFilms().filter((film) => film.isWatched);
-          const profileRank = this._getProfileRank(watchedFilms);
-          const {uniqGenres, topGenre, filmsByGenresCounts} = this._getStatisticByGenres(watchedFilms);
+  _updateInitFilmCard() {
+    this._films = this._filmsModel.getFilms();
+    this._isLoading = false;
+    this._loadingView.getElement().remove();
+    this._filmsDefaultSort = this._films.slice();
+    render(this._filmWrapView, this._filmContainerView, `beforeend`);
+    render(this._filmListView, this._filmWrapView, `beforeend`);
+    this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
-          if (this._statisticView) {
-            this._statisticView.getElement().remove();
-          }
+    if (this._films.length > FILM_COUNT_PER_STEP) {
+      this._renderShowMoreButton();
+    }
 
-          this._statisticView = new StatisticView(
-              StatisticPeriod.ALLTIME, uniqGenres, filmsByGenresCounts, watchedFilms, topGenre, profileRank
-          );
-          render(this._statisticView, this._mainElement, `beforeend`);
-          this._statisticView.renderChart();
-          this._statisticView.setClickPeriodHandler(this._updateStatistic.bind(this));
+    this._footerStatsView = new FooterStatsView(this._films);
+    render(this._footerStatsView, this._footerStatElement, `beforeend`);
+    this._profileView = new ProfileView(this._films);
+    render(this._profileView, this._headerElement, `beforeend`);
+  }
 
-          return;
-        }
+  _updateMinorFilmCard(newFilm) {
+    this._filmCardPresenters[newFilm.id].updateFilmCard(newFilm);
+    this._profileView.getElement().remove();
+    this._profileView = new ProfileView(this._filmsModel.getFilms());
+    render(this._profileView, this._headerElement, `beforeend`);
+  }
 
-        if (this._statisticView) {
-          this._statisticView.getElement().remove();
-        }
+  _updateMajorFilmCard() {
+    const filterType = this._filterModel.getFilter();
 
-        render(this._sortView, this._mainElement, `beforeend`);
-        render(this._filmContainerView, this._mainElement, `beforeend`);
+    if (filterType === FilterType.STATISTIC) {
+      this._filmContainerView.getElement().remove();
+      this._sortView.getElement().remove();
+      const watchedFilms = this._filmsModel.getFilms().filter((film) => film.isWatched);
+      const profileRank = this._getProfileRank(watchedFilms);
+      const {uniqGenres, topGenre, filmsByGenresCounts} = this._getStatisticByGenres(watchedFilms);
 
-        this._films = filter[filterType](this._filmsModel.getFilms());
-        this._filmsDefaultSort = this._films.slice();
-        this._replaceSort(SortBy.DEFAULT);
-        this._filmListView.getElement().innerHTML = ``;
-        this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
-        this._profileView.getElement().remove();
-        this._profileView = new ProfileView(this._filmsModel.getFilms());
-        render(this._profileView, this._headerElement, `beforeend`);
+      if (this._statisticView) {
+        this._statisticView.getElement().remove();
+      }
 
-        if (this._films.length > FILM_COUNT_PER_STEP) {
-          this._buttonMoreView.removeClickHandler();
-          this._renderShowMoreButton();
-        } else {
-          this._buttonMoreView.removeClickHandler();
-          this._buttonMoreView.getElement().remove();
-        }
+      this._statisticView = new StatisticView(
+          StatisticPeriod.ALLTIME, uniqGenres, filmsByGenresCounts, watchedFilms, topGenre, profileRank
+      );
+      render(this._statisticView, this._mainElement, `beforeend`);
+      this._statisticView.renderChart();
+      this._statisticView.setClickPeriodHandler(this._updateStatistic.bind(this));
+
+      return;
+    }
+
+    if (this._statisticView) {
+      this._statisticView.getElement().remove();
+    }
+
+    render(this._sortView, this._mainElement, `beforeend`);
+    render(this._filmContainerView, this._mainElement, `beforeend`);
+
+    this._films = filter[filterType](this._filmsModel.getFilms());
+    this._filmsDefaultSort = this._films.slice();
+    this._replaceSort(SortBy.DEFAULT);
+    this._filmListView.getElement().innerHTML = ``;
+    this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
+    this._profileView.getElement().remove();
+    this._profileView = new ProfileView(this._filmsModel.getFilms());
+    render(this._profileView, this._headerElement, `beforeend`);
+
+    if (this._films.length > FILM_COUNT_PER_STEP) {
+      this._buttonMoreView.removeClickHandler();
+      this._renderShowMoreButton();
+    } else {
+      this._buttonMoreView.removeClickHandler();
+      this._buttonMoreView.getElement().remove();
     }
   }
 
