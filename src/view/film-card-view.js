@@ -2,7 +2,7 @@ import AbstractView from './abstract-view.js';
 import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
 
 const createFilmCardMarkup = (film) => {
-  let {
+  const {
     title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, releaseDate, genres
   } = film;
   const controlActive = `film-card__controls-item--active`;
@@ -10,20 +10,20 @@ const createFilmCardMarkup = (film) => {
   const watched = isWatched ? controlActive : ``;
   const watchlist = isWatchlist ? controlActive : ``;
   const releaseYear = releaseDate.getFullYear();
-  duration = convertTotalMinutesToHoursMinutes(duration);
-  genres = genres.length === 0 ? `` : genres[0];
-  description = description.length <= 140 ? description : description.slice(0, 140) + `...`;
+  const filmDuration = convertTotalMinutesToHoursMinutes(duration);
+  const filmGenres = genres.length === 0 ? `` : genres[0];
+  const filmDescription = description.length <= 140 ? description : description.slice(0, 140) + `...`;
 
   return `<article class="film-card">
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${rate}</p>
       <p class="film-card__info">
         <span class="film-card__year">${releaseYear}</span>
-        <span class="film-card__duration">${duration.hours}h ${duration.minutes}m</span>
-        <span class="film-card__genre">${genres}</span>
+        <span class="film-card__duration">${filmDuration.hours}h ${filmDuration.minutes}m</span>
+        <span class="film-card__genre">${filmGenres}</span>
       </p>
       <img src="./${poster}" alt="" class="film-card__poster">
-      <p class="film-card__description">${description}</p>
+      <p class="film-card__description">${filmDescription}</p>
       <a class="film-card__comments">${comments.length} comments</a>
       <form class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${watchlist}">
