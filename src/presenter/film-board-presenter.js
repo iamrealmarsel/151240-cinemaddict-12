@@ -64,7 +64,7 @@ export default class FilmBoardPresenter {
     event.preventDefault();
     const sortTypeClick = event.target.dataset.sort;
 
-    if (event.target.tagName === `A` & sortTypeClick !== this._currentSortType) {
+    if (event.target.tagName === `A` && sortTypeClick !== this._currentSortType) {
       this._filmListView.getElement().innerHTML = ``;
 
       switch (sortTypeClick) {
@@ -81,7 +81,7 @@ export default class FilmBoardPresenter {
 
       this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
-      if (this._films.length > FILM_COUNT_PER_STEP & !this._buttonMoreView.hasDomElement()) {
+      if (this._films.length > FILM_COUNT_PER_STEP && !this._buttonMoreView.hasDomElement()) {
         this._renderShowMoreButton();
       }
 
