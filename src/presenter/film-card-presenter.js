@@ -1,6 +1,6 @@
 import FilmCardView from '../view/film-card-view.js';
 import FilmDetailsView from '../view/film-details-view.js';
-import {render} from '../utils/render.js';
+import {render, RenderPosition} from '../utils/render.js';
 import {ActionType} from '../const.js';
 
 export default class FilmCardPresenter {
@@ -14,7 +14,7 @@ export default class FilmCardPresenter {
 
   init(film) {
     this._createFilmCardInstance(film);
-    render(this._filmCardView, this._filmListView, `beforeend`);
+    render(this._filmCardView, this._filmListView, RenderPosition.BEFOREEND);
     this._filmCardViewOld = this._filmCardView;
     this._filmDetailsViewOld = this._filmDetailsView;
   }
@@ -82,7 +82,7 @@ export default class FilmCardPresenter {
   _onFilmCardClick(event) {
     event.preventDefault();
     this._callback.closePopup();
-    render(this._filmDetailsView, this._mainElement, `afterend`);
+    render(this._filmDetailsView, this._mainElement, RenderPosition.AFTEREND);
     this._api.getComments(this._film.id).then((comments) => this._filmDetailsView.renderComments(comments));
     document.addEventListener(`keydown`, this._onEscapeDown.bind(this));
   }

@@ -1,4 +1,4 @@
-import {render} from '../utils/render.js';
+import {render, RenderPosition} from '../utils/render.js';
 import FilterView from '../view/filter-view.js';
 
 export default class FilterPresenter {
@@ -16,7 +16,7 @@ export default class FilterPresenter {
     this._filterView.setFilterClick(this._onFilterClick.bind(this));
 
     if (!this._previousFilterView) {
-      render(this._filterView, this._mainElement, `afterbegin`);
+      render(this._filterView, this._mainElement, RenderPosition.AFTERBEGIN);
     } else {
       this._previousFilterView.getElement().replaceWith(this._filterView.getElement());
     }

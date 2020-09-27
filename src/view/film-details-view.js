@@ -1,6 +1,6 @@
 import AbstractView from './abstract-view.js';
 import CommentsView from './comments-view.js';
-import {render} from '../utils/render.js';
+import {render, RenderPosition} from '../utils/render.js';
 import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
 import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import moment from "moment";
@@ -215,7 +215,7 @@ export default class FilmDetailsView extends AbstractView {
     const commentsView = new CommentsView(comment);
     commentsView.setCommentDeleteHandler(this._callback.deleteComment);
     this._commentsViews[comment.id] = commentsView;
-    render(commentsView, this.getElement().querySelector(`.film-details__comments-list`), `beforeend`);
+    render(commentsView, this.getElement().querySelector(`.film-details__comments-list`), RenderPosition.BEFOREEND);
   }
 
   setFormSubmitHandler(callback) {

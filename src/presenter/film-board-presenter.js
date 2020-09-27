@@ -1,6 +1,6 @@
 import moment from 'moment';
 import {FILM_COUNT_PER_STEP, SortBy, UpdateType, ActionType, FilterType, StatisticPeriod} from '../const.js';
-import {render} from '../utils/render.js';
+import {render, RenderPosition} from '../utils/render.js';
 import {filter} from '../utils/filter.js';
 import {getProfileRank} from '../utils/common.js';
 import FilmContainerView from '../view/film-container-view.js';
@@ -40,8 +40,8 @@ export default class FilmBoardPresenter {
     this._sortView = new SortView(this._currentSortType);
 
     this._sortView.setClickHandler(this._onSortClick.bind(this));
-    render(this._sortView, this._mainElement, `beforeend`);
-    render(this._filmContainerView, this._mainElement, `beforeend`);
+    render(this._sortView, this._mainElement, RenderPosition.BEFOREEND);
+    render(this._filmContainerView, this._mainElement, RenderPosition.BEFOREEND);
 
     if (this._isLoading) {
       this._renderLoading();
@@ -122,7 +122,7 @@ export default class FilmBoardPresenter {
     this._statisticView = new StatisticView(
         period, uniqGenres, filmsByGenresCounts, watchedFilms, topGenre, profileRank
     );
-    render(this._statisticView, this._mainElement, `beforeend`);
+    render(this._statisticView, this._mainElement, RenderPosition.BEFOREEND);
     this._statisticView.renderChart();
     this._statisticView.setClickPeriodHandler(this._updateStatistic.bind(this));
   }
@@ -215,8 +215,8 @@ export default class FilmBoardPresenter {
     this._isLoading = false;
     this._loadingView.getElement().remove();
     this._filmsDefaultSort = this._films.slice();
-    render(this._filmWrapView, this._filmContainerView, `beforeend`);
-    render(this._filmListView, this._filmWrapView, `beforeend`);
+    render(this._filmWrapView, this._filmContainerView, RenderPosition.BEFOREEND);
+    render(this._filmListView, this._filmWrapView, RenderPosition.BEFOREEND);
     this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
 
     if (this._films.length > FILM_COUNT_PER_STEP) {
@@ -224,16 +224,16 @@ export default class FilmBoardPresenter {
     }
 
     this._footerStatsView = new FooterStatsView(this._films);
-    render(this._footerStatsView, this._footerStatElement, `beforeend`);
+    render(this._footerStatsView, this._footerStatElement, RenderPosition.BEFOREEND);
     this._profileView = new ProfileView(this._films);
-    render(this._profileView, this._headerElement, `beforeend`);
+    render(this._profileView, this._headerElement, RenderPosition.BEFOREEND);
   }
 
   _updateMinorFilmCard(newFilm) {
     this._filmCardPresenters[newFilm.id].updateFilmCard(newFilm);
     this._profileView.getElement().remove();
     this._profileView = new ProfileView(this._filmsModel.getFilms());
-    render(this._profileView, this._headerElement, `beforeend`);
+    render(this._profileView, this._headerElement, RenderPosition.BEFOREEND);
   }
 
   _updateMajorFilmCard() {
@@ -253,7 +253,7 @@ export default class FilmBoardPresenter {
       this._statisticView = new StatisticView(
           StatisticPeriod.ALLTIME, uniqGenres, filmsByGenresCounts, watchedFilms, topGenre, profileRank
       );
-      render(this._statisticView, this._mainElement, `beforeend`);
+      render(this._statisticView, this._mainElement, RenderPosition.BEFOREEND);
       this._statisticView.renderChart();
       this._statisticView.setClickPeriodHandler(this._updateStatistic.bind(this));
 
@@ -264,8 +264,8 @@ export default class FilmBoardPresenter {
       this._statisticView.getElement().remove();
     }
 
-    render(this._sortView, this._mainElement, `beforeend`);
-    render(this._filmContainerView, this._mainElement, `beforeend`);
+    render(this._sortView, this._mainElement, RenderPosition.BEFOREEND);
+    render(this._filmContainerView, this._mainElement, RenderPosition.BEFOREEND);
 
     this._films = filter[filterType](this._filmsModel.getFilms());
     this._filmsDefaultSort = this._films.slice();
@@ -274,7 +274,7 @@ export default class FilmBoardPresenter {
     this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
     this._profileView.getElement().remove();
     this._profileView = new ProfileView(this._filmsModel.getFilms());
-    render(this._profileView, this._headerElement, `beforeend`);
+    render(this._profileView, this._headerElement, RenderPosition.BEFOREEND);
 
     if (this._films.length > FILM_COUNT_PER_STEP) {
       this._buttonMoreView.removeClickHandler();
@@ -286,11 +286,11 @@ export default class FilmBoardPresenter {
   }
 
   _renderLoading() {
-    render(this._loadingView, this._filmContainerView, `beforeend`);
+    render(this._loadingView, this._filmContainerView, RenderPosition.BEFOREEND);
   }
 
   _renderNoFilms() {
-    render(this._noFilmsView, this._filmContainerView, `beforeend`);
+    render(this._noFilmsView, this._filmContainerView, RenderPosition.BEFOREEND);
   }
 
   _renderFilmCard(film) {
@@ -310,7 +310,7 @@ export default class FilmBoardPresenter {
 
   _renderShowMoreButton() {
     this._filmCountRender = FILM_COUNT_PER_STEP;
-    render(this._buttonMoreView, this._filmListView, `afterend`);
+    render(this._buttonMoreView, this._filmListView, RenderPosition.AFTEREND);
     this._buttonMoreView.setClickHandler(this._onShowMoreButtonClick.bind(this));
   }
 

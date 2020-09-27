@@ -1,3 +1,15 @@
+const ProfileRank = {
+  NOVICE: `novice`,
+  FUN: `fun`,
+  MOVIE_BUFF: `movie buff`,
+};
+
+const WatchedFilmsCountBy = {
+  NOVICE: 1,
+  FUN: 11,
+  MOVIE_BUFF: 21,
+};
+
 export const convertTotalMinutesToHoursMinutes = (totalMinutes) => {
   const minutes = totalMinutes % 60;
   const hours = (totalMinutes - minutes) / 60;
@@ -12,16 +24,14 @@ export const deleteProperties = (object, ...properties) => {
 };
 
 export const getProfileRank = (watchedFilms) => {
-  let profileRank;
+  let profileRank = ``;
 
-  if (watchedFilms === 0) {
-    profileRank = ``;
-  } else if (watchedFilms <= 10) {
-    profileRank = `novice`;
-  } else if (watchedFilms <= 20) {
-    profileRank = `fun`;
-  } else {
-    profileRank = `movie buff`;
+  if (watchedFilms >= WatchedFilmsCountBy.MOVIE_BUFF) {
+    profileRank = ProfileRank.MOVIE_BUFF;
+  } else if (watchedFilms >= WatchedFilmsCountBy.FUN) {
+    profileRank = ProfileRank.FUN;
+  } else if (watchedFilms >= WatchedFilmsCountBy.NOVICE) {
+    profileRank = ProfileRank.NOVICE;
   }
 
   return profileRank;
