@@ -1,4 +1,5 @@
 import AbstractView from './abstract-view.js';
+import {getProfileRank} from '../utils/common.js';
 
 const createProfileMarkup = (film) => {
   let watched = 0;
@@ -7,20 +8,10 @@ const createProfileMarkup = (film) => {
     watched = value.isWatched ? watched + 1 : watched + 0;
   }
 
-  let profileRating = ``;
-
-  if (watched === 0) {
-    profileRating = ``;
-  } else if (watched <= 10) {
-    profileRating = `novice`;
-  } else if (watched <= 20) {
-    profileRating = `fun`;
-  } else {
-    profileRating = `movie buff`;
-  }
+  const profileRank = getProfileRank(watched);
 
   return `<section class="header__profile profile">
-      <p class="profile__rating">${profileRating}</p>
+      <p class="profile__rating">${profileRank}</p>
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>`;
 };

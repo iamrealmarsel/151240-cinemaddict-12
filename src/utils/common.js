@@ -10,3 +10,19 @@ export const deleteProperties = (object, ...properties) => {
     delete object[prop];
   });
 };
+
+export const getProfileRank = (watchedFilms) => {
+  let profileRank;
+
+  if (watchedFilms === 0) {
+    profileRank = ``;
+  } else if (watchedFilms <= 10) {
+    profileRank = `novice`;
+  } else if (watchedFilms <= 20) {
+    profileRank = `fun`;
+  } else {
+    profileRank = `movie buff`;
+  }
+
+  return profileRank;
+};

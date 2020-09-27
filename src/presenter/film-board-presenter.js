@@ -2,6 +2,7 @@ import moment from 'moment';
 import {FILM_COUNT_PER_STEP, SortBy, UpdateType, ActionType, FilterType, StatisticPeriod} from '../const.js';
 import {render} from '../utils/render.js';
 import {filter} from '../utils/filter.js';
+import {getProfileRank} from '../utils/common.js';
 import FilmContainerView from '../view/film-container-view.js';
 import FilmWrapView from '../view/film-wrap-view.js';
 import NoFilmsView from '../view/no-films-view.js';
@@ -96,25 +97,9 @@ export default class FilmBoardPresenter {
     this._currentSortType = sortType;
   }
 
-  _getProfileRank(watchedFilms) {
-    let profileRank;
-
-    if (watchedFilms.length === 0) {
-      profileRank = ``;
-    } else if (watchedFilms.length <= 10) {
-      profileRank = `novice`;
-    } else if (watchedFilms.length <= 20) {
-      profileRank = `fun`;
-    } else {
-      profileRank = `movie buff`;
-    }
-
-    return profileRank;
-  }
-
   _updateStatistic(period) {
     let watchedFilms = this._filmsModel.getFilms().filter((film) => film.isWatched);
-    const profileRank = this._getProfileRank(watchedFilms);
+    const profileRank = getProfileRank(watchedFilms.length);
 
     switch (period) {
       case StatisticPeriod.TODAY:
@@ -258,7 +243,7 @@ export default class FilmBoardPresenter {
       this._filmContainerView.getElement().remove();
       this._sortView.getElement().remove();
       const watchedFilms = this._filmsModel.getFilms().filter((film) => film.isWatched);
-      const profileRank = this._getProfileRank(watchedFilms);
+      const profileRank = getProfileRank(watchedFilms.length);
       const {uniqGenres, topGenre, filmsByGenresCounts} = this._getStatisticByGenres(watchedFilms);
 
       if (this._statisticView) {
