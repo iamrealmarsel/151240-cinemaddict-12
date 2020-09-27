@@ -45,24 +45,24 @@ export default class FilmCardPresenter {
     this._filmCardView = new FilmCardView(this._film);
     this._filmDetailsView = new FilmDetailsView(this._film);
 
-    this._filmCardView.setClickHandler(this._onFilmCardClick.bind(this));
+    this._filmCardView.setClickHandler(this._handleFilmCardClick.bind(this));
     this._filmCardView.setClickWatchlistHandler(this._handleWatchlistClick.bind(this));
     this._filmCardView.setClickHistoryHandler(this._handleHistoryClick.bind(this));
     this._filmCardView.setClickFavoriteHandler(this._handleFavoriteClick.bind(this));
-    this._filmDetailsView.setClickHandler(this._onCloseClick.bind(this));
+    this._filmDetailsView.setClickHandler(this._handleCloseClick.bind(this));
     this._filmDetailsView.setClickWatchlistHandler(this._handleWatchlistClick.bind(this));
     this._filmDetailsView.setClickHistoryHandler(this._handleHistoryClick.bind(this));
     this._filmDetailsView.setClickFavoriteHandler(this._handleFavoriteClick.bind(this));
     this._filmDetailsView.setClickEmojiHandler();
-    this._filmDetailsView.setFormSubmitHandler(this._onFormSubmit.bind(this));
-    this._filmDetailsView.setCommentDeleteHandler(this._onCommentDeleteClick.bind(this));
+    this._filmDetailsView.setFormSubmitHandler(this._handleFormSubmit.bind(this));
+    this._filmDetailsView.setCommentDeleteHandler(this._handleCommentDeleteClick.bind(this));
   }
 
-  _onCommentDeleteClick(comment, updateType, actionType) {
+  _handleCommentDeleteClick(comment, updateType, actionType) {
     this._updateData(comment, updateType, actionType);
   }
 
-  _onFormSubmit(comment, updateType, actionType) {
+  _handleFormSubmit(comment, updateType, actionType) {
     this._film.comments.push(comment);
     this._updateData(this._film, updateType, actionType);
   }
@@ -75,12 +75,12 @@ export default class FilmCardPresenter {
     }
   }
 
-  _onCloseClick() {
+  _handleCloseClick() {
     this._filmDetailsView.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscapeDown);
   }
 
-  _onFilmCardClick(event) {
+  _handleFilmCardClick(event) {
     event.preventDefault();
     this._callback.closePopup();
     render(this._filmDetailsView, this._mainElement, RenderPosition.AFTEREND);

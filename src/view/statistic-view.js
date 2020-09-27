@@ -142,10 +142,10 @@ export default class StatisticView extends AbstractView {
 
   setClickPeriodHandler(callback) {
     this._callback = callback;
-    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._onClickPeriod.bind(this));
+    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._onPeriodClick.bind(this));
   }
 
-  _onClickPeriod(event) {
+  _onPeriodClick(event) {
     this._callback(event.target.value);
   }
 

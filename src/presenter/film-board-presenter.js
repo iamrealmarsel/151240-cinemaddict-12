@@ -56,7 +56,7 @@ export default class FilmBoardPresenter {
     }
   }
 
-  _closePopup() {
+  _handleClosePopup() {
     Object.values(this._filmCardPresenters).forEach((filmCardPresenter) => filmCardPresenter.closePopup());
   }
 
@@ -298,7 +298,7 @@ export default class FilmBoardPresenter {
         this._mainElement, this._filmListView, this._updateData.bind(this), this._api
     );
     filmCardPresenter.init(film);
-    filmCardPresenter.setClosePopup(this._closePopup.bind(this));
+    filmCardPresenter.setClosePopup(this._handleClosePopup.bind(this));
     this._filmCardPresenters[film.id] = filmCardPresenter;
   }
 
