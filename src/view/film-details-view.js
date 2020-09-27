@@ -130,7 +130,6 @@ const createFilmDetailsMarkup = (film) => {
     </section>`;
 };
 
-
 export default class FilmDetailsView extends AbstractView {
   constructor(film) {
     super();

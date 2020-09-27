@@ -10,6 +10,7 @@ export default class FilmCardPresenter {
     this._updateData = updateData;
     this._callback = {};
     this._api = api;
+    this._onEscapeDown = this._onEscapeDown.bind(this);
   }
 
   init(film) {
@@ -84,7 +85,7 @@ export default class FilmCardPresenter {
     this._callback.closePopup();
     render(this._filmDetailsView, this._mainElement, RenderPosition.AFTEREND);
     this._api.getComments(this._film.id).then((comments) => this._filmDetailsView.renderComments(comments));
-    document.addEventListener(`keydown`, this._onEscapeDown.bind(this));
+    document.addEventListener(`keydown`, this._onEscapeDown);
   }
 
   setClosePopup(callback) {
