@@ -3,6 +3,12 @@ import FilmDetailsView from '../view/film-details-view.js';
 import {render, RenderPosition} from '../utils/render.js';
 import {ActionType} from '../const.js';
 
+const ControlButtons = {
+  WATCHLIST: `isWatchlist`,
+  WATCHED: `isWatched`,
+  FAVORITE: `isFavorite`
+};
+
 export default class FilmCardPresenter {
   constructor(mainElement, filmListView, updateData, api) {
     this._filmListView = filmListView;
@@ -94,15 +100,15 @@ export default class FilmCardPresenter {
   }
 
   _handleWatchlistClick(updateType, actionType) {
-    this._handleClick(updateType, actionType, `isWatchlist`);
+    this._handleClick(updateType, actionType, ControlButtons.WATCHLIST);
   }
 
   _handleHistoryClick(updateType, actionType) {
-    this._handleClick(updateType, actionType, `isWatched`);
+    this._handleClick(updateType, actionType, ControlButtons.WATCHED);
   }
 
   _handleFavoriteClick(updateType, actionType) {
-    this._handleClick(updateType, actionType, `isFavorite`);
+    this._handleClick(updateType, actionType, ControlButtons.FAVORITE);
   }
 
   _handleClick(updateType, actionType, field) {

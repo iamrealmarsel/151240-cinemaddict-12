@@ -15,6 +15,13 @@ import ProfileView from '../view/profile-view.js';
 import StatisticView from '../view/statistic-view.js';
 import FilmCardPresenter from './film-card-presenter.js';
 
+const TimeInterval = {
+  DAY: `day`,
+  WEEKS: `weeks`,
+  MONTHS: `months`,
+  YEARS: `years`,
+};
+
 export default class FilmBoardPresenter {
   constructor(headerElement, mainElement, footerStatElement, filmsModel, filterModel, api) {
     this._filmCardPresenters = {};
@@ -70,16 +77,16 @@ export default class FilmBoardPresenter {
 
     switch (period) {
       case StatisticPeriod.TODAY:
-        watchedFilms = this._filterPeriod(watchedFilms, `today`);
+        watchedFilms = this._filterPeriod(watchedFilms, TimeInterval.DAY);
         break;
       case StatisticPeriod.WEEK:
-        watchedFilms = this._filterPeriod(watchedFilms, `weeks`);
+        watchedFilms = this._filterPeriod(watchedFilms, TimeInterval.WEEKS);
         break;
       case StatisticPeriod.MONTH:
-        watchedFilms = this._filterPeriod(watchedFilms, `months`);
+        watchedFilms = this._filterPeriod(watchedFilms, TimeInterval.MONTHS);
         break;
       case StatisticPeriod.YEAR:
-        watchedFilms = this._filterPeriod(watchedFilms, `years`);
+        watchedFilms = this._filterPeriod(watchedFilms, TimeInterval.YEARS);
         break;
     }
 
@@ -95,14 +102,14 @@ export default class FilmBoardPresenter {
   }
 
   _filterPeriod(watchedFilms, period) {
-    if (period === `today`) {
+    if (period === TimeInterval.DAY) {
       watchedFilms = watchedFilms
         .filter((film) => moment(film.watchingDate)
-        .isSame(moment(), `day`));
+        .isSame(moment(), TimeInterval.DAY));
     } else {
       watchedFilms = watchedFilms
         .filter((film) => moment(film.watchingDate)
-        .isBetween(moment().subtract(1, period), moment(), `day`, `[]`));
+        .isBetween(moment().subtract(1, period), moment(), TimeInterval.DAY, `[]`));
     }
 
     return watchedFilms;

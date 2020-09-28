@@ -1,14 +1,4 @@
-const ProfileRank = {
-  NOVICE: `novice`,
-  FUN: `fun`,
-  MOVIE_BUFF: `movie buff`,
-};
-
-const WatchedFilmsCountBy = {
-  NOVICE: 1,
-  FUN: 11,
-  MOVIE_BUFF: 21,
-};
+import {ProfileRank, WatchedFilmsCountBy} from '../const.js';
 
 export const convertTotalMinutesToHoursMinutes = (totalMinutes) => {
   const minutes = totalMinutes % 60;
