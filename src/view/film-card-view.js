@@ -1,6 +1,8 @@
 import AbstractView from './abstract-view.js';
 import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
 
+const MAX_DESCRIPTION_LENGTH = 140;
+
 const createFilmCardMarkup = (film) => {
   const {
     title, poster, description, comments, isFavorite, isWatched, isWatchlist, rate, duration, releaseDate, genres
@@ -12,7 +14,9 @@ const createFilmCardMarkup = (film) => {
   const releaseYear = releaseDate.getFullYear();
   const filmDuration = convertTotalMinutesToHoursMinutes(duration);
   const filmGenres = genres.length === 0 ? `` : genres[0];
-  const filmDescription = description.length <= 140 ? description : description.slice(0, 140) + `...`;
+  const filmDescription = description.length <= MAX_DESCRIPTION_LENGTH
+    ? description
+    : description.slice(0, MAX_DESCRIPTION_LENGTH) + `...`;
 
   return `<article class="film-card">
       <h3 class="film-card__title">${title}</h3>
@@ -43,6 +47,10 @@ export default class FilmCardView extends AbstractView {
     this._callback = {};
   }
 
+  getMarkup() {
+    return createFilmCardMarkup(this._film);
+  }
+
   setClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._callback.click);
@@ -56,20 +64,10 @@ export default class FilmCardView extends AbstractView {
       .addEventListener(`click`, this._onWatchlistClick.bind(this));
   }
 
-  _onWatchlistClick(event) {
-    event.preventDefault();
-    this._callback.clickWatchlist();
-  }
-
   setClickHistoryHandler(callback) {
     this._callback.clickHistory = callback;
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
       .addEventListener(`click`, this._onHistoryClick.bind(this));
-  }
-
-  _onHistoryClick(event) {
-    event.preventDefault();
-    this._callback.clickHistory();
   }
 
   setClickFavoriteHandler(callback) {
@@ -83,7 +81,13 @@ export default class FilmCardView extends AbstractView {
     this._callback.clickFavorite();
   }
 
-  getMarkup() {
-    return createFilmCardMarkup(this._film);
+  _onWatchlistClick(event) {
+    event.preventDefault();
+    this._callback.clickWatchlist();
+  }
+
+  _onHistoryClick(event) {
+    event.preventDefault();
+    this._callback.clickHistory();
   }
 }

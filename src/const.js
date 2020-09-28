@@ -32,3 +32,15 @@ export const StatisticPeriod = {
   MONTH: `month`,
   YEAR: `year`,
 };
+
+export const ProfileRank = {
+  NOVICE: `novice`,
+  FUN: `fun`,
+  MOVIE_BUFF: `movie buff`,
+};
+
+export const WatchedFilmsCountBy = {
+  NOVICE: 1,
+  FUN: 11,
+  MOVIE_BUFF: 21,
+};

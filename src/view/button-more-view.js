@@ -10,6 +10,14 @@ export default class ButtonMoreView extends AbstractView {
     this._callback = {};
   }
 
+  getMarkup() {
+    return createButtonMoreMarkup();
+  }
+
+  hasDomElement() {
+    return Boolean(document.querySelector(`.films-list__show-more`));
+  }
+
   setClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().addEventListener(`click`, this._callback.click);
@@ -17,13 +25,5 @@ export default class ButtonMoreView extends AbstractView {
 
   removeClickHandler() {
     this.getElement().removeEventListener(`click`, this._callback.click);
-  }
-
-  hasDomElement() {
-    return Boolean(document.querySelector(`.films-list__show-more`));
-  }
-
-  getMarkup() {
-    return createButtonMoreMarkup();
   }
 }

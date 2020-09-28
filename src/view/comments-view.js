@@ -30,27 +30,19 @@ export default class CommentsView extends AbstractView {
     this._comment = comment;
   }
 
-  setCommentDeleteHandler(callback) {
-    this._callback = callback;
-    this.getElement().querySelector(`.film-details__comment-delete`)
-      .addEventListener(`click`, this._onDeleteCommentClick.bind(this));
-  }
-
-  _onDeleteCommentClick(event) {
-    event.preventDefault();
-    this._blockElement();
-    this._callback(this._comment, UpdateType.MINOR, ActionType.DELETE_COMMENT);
-  }
-
-  _blockElement() {
-    this.getElement().querySelector(`.film-details__comment-delete`).disabled = true;
-    this.getElement().querySelector(`.film-details__comment-delete`).textContent = `Deleting...`;
+  getMarkup() {
+    return createCommentsMarkup(this._comment);
   }
 
   unblockElement() {
     this._errorShake();
     this.getElement().querySelector(`.film-details__comment-delete`).disabled = false;
     this.getElement().querySelector(`.film-details__comment-delete`).textContent = `Delete`;
+  }
+
+  _blockElement() {
+    this.getElement().querySelector(`.film-details__comment-delete`).disabled = true;
+    this.getElement().querySelector(`.film-details__comment-delete`).textContent = `Deleting...`;
   }
 
   _errorShake() {
@@ -61,7 +53,15 @@ export default class CommentsView extends AbstractView {
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
-  getMarkup() {
-    return createCommentsMarkup(this._comment);
+  setCommentDeleteHandler(callback) {
+    this._callback = callback;
+    this.getElement().querySelector(`.film-details__comment-delete`)
+      .addEventListener(`click`, this._onDeleteCommentClick.bind(this));
+  }
+
+  _onDeleteCommentClick(event) {
+    event.preventDefault();
+    this._blockElement();
+    this._callback(this._comment, UpdateType.MINOR, ActionType.DELETE_COMMENT);
   }
 }

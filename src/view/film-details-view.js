@@ -1,6 +1,6 @@
 import AbstractView from './abstract-view.js';
 import CommentsView from './comments-view.js';
-import {render} from '../utils/render.js';
+import {render, RenderPosition} from '../utils/render.js';
 import {convertTotalMinutesToHoursMinutes} from '../utils/common.js';
 import {UpdateType, ActionType, SHAKE_ANIMATION_TIMEOUT} from '../const.js';
 import moment from "moment";
@@ -130,7 +130,6 @@ const createFilmDetailsMarkup = (film) => {
     </section>`;
 };
 
-
 export default class FilmDetailsView extends AbstractView {
   constructor(film) {
     super();
@@ -140,104 +139,8 @@ export default class FilmDetailsView extends AbstractView {
     this._commentsViews = [];
   }
 
-  setClickHandler(callback) {
-    this._callback.click = callback;
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closePopup.bind(this));
-  }
-
-  _closePopup(event) {
-    event.preventDefault();
-    this._callback.click();
-  }
-
-  setClickWatchlistHandler(callback) {
-    this._callback.clickWatchlist = callback;
-    this.getElement().querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, this._onWatchlistClick.bind(this));
-  }
-
-  _onWatchlistClick(event) {
-    event.preventDefault();
-    this._callback.clickWatchlist(UpdateType.MINOR);
-  }
-
-  setClickHistoryHandler(callback) {
-    this._callback.clickHistory = callback;
-    this.getElement().querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, this._onHistoryClick.bind(this));
-  }
-
-  _onHistoryClick(event) {
-    event.preventDefault();
-    this._callback.clickHistory(UpdateType.MINOR);
-  }
-
-  setClickFavoriteHandler(callback) {
-    this._callback.clickFavorite = callback;
-    this.getElement().querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, this._onFavoriteClick.bind(this));
-  }
-
-  _onFavoriteClick(event) {
-    event.preventDefault();
-    this._callback.clickFavorite(UpdateType.MINOR);
-  }
-
-  setClickEmojiHandler() {
-    this.getElement()
-      .querySelectorAll(`.film-details__emoji-label`)
-      .forEach((element) => {
-        element.addEventListener(`click`, this._onEmojiClick.bind(this));
-      });
-  }
-
-  _onEmojiClick(event) {
-    const partsOfImagePath = event.target.tagName === `LABEL`
-      ? event.target.querySelector(`img`).src.split(`/`)
-      : event.target.src.split(`/`);
-    const emotionFullName = partsOfImagePath[partsOfImagePath.length - 1];
-    this._comment.emotion = emotionFullName.slice(0, -4);
-    this.getElement()
-      .querySelector(`.film-details__add-emoji-label`)
-      .innerHTML = `<img src="images/emoji/${this._comment.emotion}.png" width="55" height="55" alt="emoji">`;
-  }
-
-  setCommentDeleteHandler(callback) {
-    this._callback.deleteComment = callback;
-  }
-
-  renderComments(comments) {
-    this.getElement().querySelector(`.film-details__comments-list`).innerHTML = ``;
-    comments.forEach((comment) => this._renderComment(comment));
-  }
-
-  _renderComment(comment) {
-    const commentsView = new CommentsView(comment);
-    commentsView.setCommentDeleteHandler(this._callback.deleteComment);
-    this._commentsViews[comment.id] = commentsView;
-    render(commentsView, this.getElement().querySelector(`.film-details__comments-list`), `beforeend`);
-  }
-
-  setFormSubmitHandler(callback) {
-    this._callback.formSubmit = callback;
-    this.getElement().querySelector(`.film-details__new-comment`)
-      .addEventListener(`keydown`, this._onFormSubmit.bind(this));
-  }
-
-  _onFormSubmit(event) {
-    if (event.keyCode === 13 && event.metaKey) {
-      this._comment.comment = this.getElement().querySelector(`.film-details__comment-input`).value;
-
-      if (this._comment.comment === `` || this._comment.emotion === undefined) {
-        this.errorShake();
-
-        return;
-      }
-
-      this._comment.date = Date.now();
-      this._blockElement();
-      this._callback.formSubmit(this._comment, UpdateType.MINOR, ActionType.ADD_COMMENT);
-    }
+  getMarkup() {
+    return createFilmDetailsMarkup(this._film);
   }
 
   unblockComment(comment) {
@@ -259,7 +162,103 @@ export default class FilmDetailsView extends AbstractView {
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
-  getMarkup() {
-    return createFilmDetailsMarkup(this._film);
+  renderComments(comments) {
+    this.getElement().querySelector(`.film-details__comments-list`).innerHTML = ``;
+    comments.forEach((comment) => this._renderComment(comment));
+  }
+
+  _renderComment(comment) {
+    const commentsView = new CommentsView(comment);
+    commentsView.setCommentDeleteHandler(this._callback.deleteComment);
+    this._commentsViews[comment.id] = commentsView;
+    render(commentsView, this.getElement().querySelector(`.film-details__comments-list`), RenderPosition.BEFOREEND);
+  }
+
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._onPopupClose.bind(this));
+  }
+
+  setClickWatchlistHandler(callback) {
+    this._callback.clickWatchlist = callback;
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, this._onWatchlistClick.bind(this));
+  }
+
+  setClickHistoryHandler(callback) {
+    this._callback.clickHistory = callback;
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, this._onHistoryClick.bind(this));
+  }
+
+  setClickFavoriteHandler(callback) {
+    this._callback.clickFavorite = callback;
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, this._onFavoriteClick.bind(this));
+  }
+
+  setClickEmojiHandler() {
+    this.getElement()
+      .querySelectorAll(`.film-details__emoji-label`)
+      .forEach((element) => {
+        element.addEventListener(`click`, this._onEmojiClick.bind(this));
+      });
+  }
+
+  setCommentDeleteHandler(callback) {
+    this._callback.deleteComment = callback;
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector(`.film-details__new-comment`)
+      .addEventListener(`keydown`, this._onFormSubmit.bind(this));
+  }
+
+  _onPopupClose(event) {
+    event.preventDefault();
+    this._callback.click();
+  }
+
+  _onWatchlistClick(event) {
+    event.preventDefault();
+    this._callback.clickWatchlist(UpdateType.MINOR);
+  }
+
+  _onHistoryClick(event) {
+    event.preventDefault();
+    this._callback.clickHistory(UpdateType.MINOR);
+  }
+
+  _onFavoriteClick(event) {
+    event.preventDefault();
+    this._callback.clickFavorite(UpdateType.MINOR);
+  }
+
+  _onEmojiClick(event) {
+    const partsOfImagePath = event.target.tagName === `LABEL`
+      ? event.target.querySelector(`img`).src.split(`/`)
+      : event.target.src.split(`/`);
+    const emotionFullName = partsOfImagePath[partsOfImagePath.length - 1];
+    this._comment.emotion = emotionFullName.slice(0, -4);
+    this.getElement()
+      .querySelector(`.film-details__add-emoji-label`)
+      .innerHTML = `<img src="images/emoji/${this._comment.emotion}.png" width="55" height="55" alt="emoji">`;
+  }
+
+  _onFormSubmit(event) {
+    if (event.keyCode === 13 && (event.ctrlKey || event.metaKey)) {
+      this._comment.comment = this.getElement().querySelector(`.film-details__comment-input`).value;
+
+      if (this._comment.comment === `` || this._comment.emotion === undefined) {
+        this.errorShake();
+
+        return;
+      }
+
+      this._comment.date = Date.now();
+      this._blockElement();
+      this._callback.formSubmit(this._comment, UpdateType.MINOR, ActionType.ADD_COMMENT);
+    }
   }
 }

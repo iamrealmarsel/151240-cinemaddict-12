@@ -8,9 +8,9 @@ const createFilterMarkup = (filmMocks, filterType) => {
   let watchlist = 0;
 
   for (const value of filmMocks) {
-    favorite = value.isFavorite ? favorite + 1 : favorite + 0;
-    watched = value.isWatched ? watched + 1 : watched + 0;
-    watchlist = value.isWatchlist ? watchlist + 1 : watchlist + 0;
+    favorite = value.isFavorite ? favorite + 1 : favorite;
+    watched = value.isWatched ? watched + 1 : watched;
+    watchlist = value.isWatchlist ? watchlist + 1 : watchlist;
   }
 
   return `<nav class="main-navigation">
@@ -38,7 +38,11 @@ export default class FilterView extends AbstractView {
     this._filterType = filterType;
   }
 
-  setFilterClick(callback) {
+  getMarkup() {
+    return createFilterMarkup(this._filmMocks, this._filterType);
+  }
+
+  setFilterClickHandler(callback) {
     this.getElement().querySelectorAll(`.main-navigation__item`)
     .forEach((element) => element.addEventListener(`click`, (event) => {
       event.preventDefault();
@@ -59,9 +63,5 @@ export default class FilterView extends AbstractView {
 
       callback(event.currentTarget.dataset.filter);
     });
-  }
-
-  getMarkup() {
-    return createFilterMarkup(this._filmMocks, this._filterType);
   }
 }
