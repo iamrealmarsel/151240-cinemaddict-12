@@ -5,7 +5,7 @@ const createProfileMarkup = (film) => {
   let watched = 0;
 
   for (const value of film) {
-    watched = value.isWatched ? watched + 1 : watched + 0;
+    watched = value.isWatched ? watched + 1 : watched;
   }
 
   const profileRank = getProfileRank(watched);
