@@ -247,7 +247,7 @@ export default class FilmDetailsView extends AbstractView {
   }
 
   _onFormSubmit(event) {
-    if (event.keyCode === 13 && event.metaKey) {
+    if (event.keyCode === 13 && (event.ctrlKey || event.metaKey)) {
       this._comment.comment = this.getElement().querySelector(`.film-details__comment-input`).value;
 
       if (this._comment.comment === `` || this._comment.emotion === undefined) {
