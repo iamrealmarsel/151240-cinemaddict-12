@@ -135,6 +135,10 @@ export default class StatisticView extends AbstractView {
     this._profileRating = profileRating;
   }
 
+  getMarkup() {
+    return createStatisticMarkup(this._period, this._watchedFilms, this._topGenre, this._profileRating);
+  }
+
   renderChart() {
     const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
     renderChart(statisticCtx, this._genres, this._filmsCounts);
@@ -147,9 +151,5 @@ export default class StatisticView extends AbstractView {
 
   _onPeriodClick(event) {
     this._callback(event.target.value);
-  }
-
-  getMarkup() {
-    return createStatisticMarkup(this._period, this._watchedFilms, this._topGenre, this._profileRating);
   }
 }

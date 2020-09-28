@@ -13,7 +13,7 @@ export default class FilterPresenter {
   init() {
     this._filterType = this._filterModel.getFilter();
     this._filterView = new FilterView(this._filmsModel.getFilms(), this._filterType);
-    this._filterView.setFilterClick(this._onFilterClick.bind(this));
+    this._filterView.setFilterClickHandler(this._onFilterClick.bind(this));
 
     if (!this._previousFilterView) {
       render(this._filterView, this._mainElement, RenderPosition.AFTERBEGIN);
@@ -24,11 +24,11 @@ export default class FilterPresenter {
     this._previousFilterView = this._filterView;
   }
 
-  _onFilterClick(filterType) {
-    this._filterModel.setFilter(filterType);
-  }
-
   _updateFilter() {
     this.init();
+  }
+
+  _onFilterClick(filterType) {
+    this._filterModel.setFilter(filterType);
   }
 }

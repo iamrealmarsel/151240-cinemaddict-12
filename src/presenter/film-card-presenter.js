@@ -58,6 +58,19 @@ export default class FilmCardPresenter {
     this._filmDetailsView.setCommentDeleteHandler(this._handleCommentDeleteClick.bind(this));
   }
 
+  closePopup() {
+    this._filmDetailsView.getElement().querySelector(`.film-details__comment-input`).value = ``;
+    this._filmDetailsView.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    this._filmDetailsView.getElement().querySelectorAll(`.film-details__emoji-item`)
+      .forEach((input) => (input.checked = false));
+    this._filmDetailsView.getElement().remove();
+    document.removeEventListener(`keydown`, this._onEscapeDown);
+  }
+
+  setClosePopup(callback) {
+    this._callback.closePopup = callback;
+  }
+
   _handleCommentDeleteClick(comment, updateType, actionType) {
     this._updateData(comment, updateType, actionType);
   }
@@ -65,14 +78,6 @@ export default class FilmCardPresenter {
   _handleFormSubmit(comment, updateType, actionType) {
     this._film.comments.push(comment);
     this._updateData(this._film, updateType, actionType);
-  }
-
-  _onEscapeDown(event) {
-    if (event.key === `Escape` || event.key === `Esc`) {
-      event.preventDefault();
-      this._filmDetailsView.getElement().remove();
-      document.removeEventListener(`keydown`, this._onEscapeDown);
-    }
   }
 
   _handleCloseClick() {
@@ -86,19 +91,6 @@ export default class FilmCardPresenter {
     render(this._filmDetailsView, this._mainElement, RenderPosition.AFTEREND);
     this._api.getComments(this._film.id).then((comments) => this._filmDetailsView.renderComments(comments));
     document.addEventListener(`keydown`, this._onEscapeDown);
-  }
-
-  setClosePopup(callback) {
-    this._callback.closePopup = callback;
-  }
-
-  closePopup() {
-    this._filmDetailsView.getElement().querySelector(`.film-details__comment-input`).value = ``;
-    this._filmDetailsView.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
-    this._filmDetailsView.getElement().querySelectorAll(`.film-details__emoji-item`)
-      .forEach((input) => (input.checked = false));
-    this._filmDetailsView.getElement().remove();
-    document.removeEventListener(`keydown`, this._onEscapeDown);
   }
 
   _handleWatchlistClick(updateType, actionType) {
@@ -117,5 +109,13 @@ export default class FilmCardPresenter {
     const newFilm = Object.assign({}, this._film);
     newFilm[field] = !newFilm[field];
     this._updateData(newFilm, updateType, actionType);
+  }
+
+  _onEscapeDown(event) {
+    if (event.key === `Escape` || event.key === `Esc`) {
+      event.preventDefault();
+      this._filmDetailsView.getElement().remove();
+      document.removeEventListener(`keydown`, this._onEscapeDown);
+    }
   }
 }

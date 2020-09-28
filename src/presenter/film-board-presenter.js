@@ -56,39 +56,6 @@ export default class FilmBoardPresenter {
     }
   }
 
-  _handleClosePopup() {
-    Object.values(this._filmCardPresenters).forEach((filmCardPresenter) => filmCardPresenter.closePopup());
-  }
-
-  _onSortClick(event) {
-    event.preventDefault();
-    const sortTypeClick = event.target.dataset.sort;
-
-    if (event.target.tagName === `A` && sortTypeClick !== this._currentSortType) {
-      this._filmListView.getElement().innerHTML = ``;
-
-      switch (sortTypeClick) {
-        case SortBy.RATING:
-          this._films.sort((a, b) => b.rate - a.rate);
-          break;
-        case SortBy.DATE:
-          this._films.sort((a, b) => b.releaseDate - a.releaseDate);
-          break;
-        case SortBy.DEFAULT:
-          this._films = this._filmsDefaultSort.slice();
-          break;
-      }
-
-      this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
-
-      if (this._films.length > FILM_COUNT_PER_STEP && !this._buttonMoreView.hasDomElement()) {
-        this._renderShowMoreButton();
-      }
-
-      this._replaceSort(sortTypeClick);
-    }
-  }
-
   _replaceSort(sortType) {
     this._previousSortView = this._sortView;
     this._sortView = new SortView(sortType);
@@ -312,6 +279,39 @@ export default class FilmBoardPresenter {
     this._filmCountRender = FILM_COUNT_PER_STEP;
     render(this._buttonMoreView, this._filmListView, RenderPosition.AFTEREND);
     this._buttonMoreView.setClickHandler(this._onShowMoreButtonClick.bind(this));
+  }
+
+  _handleClosePopup() {
+    Object.values(this._filmCardPresenters).forEach((filmCardPresenter) => filmCardPresenter.closePopup());
+  }
+
+  _onSortClick(event) {
+    event.preventDefault();
+    const sortTypeClick = event.target.dataset.sort;
+
+    if (event.target.tagName === `A` && sortTypeClick !== this._currentSortType) {
+      this._filmListView.getElement().innerHTML = ``;
+
+      switch (sortTypeClick) {
+        case SortBy.RATING:
+          this._films.sort((a, b) => b.rate - a.rate);
+          break;
+        case SortBy.DATE:
+          this._films.sort((a, b) => b.releaseDate - a.releaseDate);
+          break;
+        case SortBy.DEFAULT:
+          this._films = this._filmsDefaultSort.slice();
+          break;
+      }
+
+      this._renderFilmList(0, Math.min(this._films.length, FILM_COUNT_PER_STEP));
+
+      if (this._films.length > FILM_COUNT_PER_STEP && !this._buttonMoreView.hasDomElement()) {
+        this._renderShowMoreButton();
+      }
+
+      this._replaceSort(sortTypeClick);
+    }
   }
 
   _onShowMoreButtonClick(event) {
