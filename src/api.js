@@ -89,7 +89,6 @@ export default class Api {
     return this._adaptFilmToClient(film);
   }
 
-
   _adaptToClient(films) {
     if (films instanceof Array) {
       const adaptedFilms = [];
@@ -99,9 +98,9 @@ export default class Api {
       });
 
       return adaptedFilms;
-    } else {
-      return this._adaptFilmToClient(films);
     }
+
+    return this._adaptFilmToClient(films);
   }
 
   _adaptToServer(film) {
