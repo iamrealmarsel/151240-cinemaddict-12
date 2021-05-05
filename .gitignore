@@ -15,5 +15,5 @@ test.js
 checkpoint.md
 
 # Собранные JS-файлы (бандл)
-public/bundle.js
-public/bundle.js.map
+# public/bundle.js
+# public/bundle.js.map
